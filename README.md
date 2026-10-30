@@ -3,7 +3,7 @@
 Artefact of the article
 
 > **Beyond Performance: A Critical Survey and Verified Twelve-Dimensional Evaluation of 3D Network-on-Chip Routing**
-> Ahmed Mesellem — manuscript under review (2026).
+> Ahmed Mesellem & Mohammed Mana — manuscript under review (2026).
 
 This repository contains everything behind the article's numbers. The pieces are:
 
@@ -195,6 +195,4 @@ deviations".
 
 ## Citation
 
-Please cite the article (see `CITATION.cff`). The structural (ERA) metrics are those of: A. Mesellem and M. Mana,
-"A trace-based structural observability framework for network-on-chip routing evaluation," *Algorithms* 19(9):765,
-2026, doi:10.3390/a19090765.
+Please cite the article (see `CITATION.cff`).
