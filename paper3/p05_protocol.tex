@@ -1,0 +1,202 @@
+% =====================================================================
+\section{Evaluation protocol, platform and analytical models}
+\label{sec:protocol}
+
+\subsection{Routing classes}
+\label{sec:classes}
+
+Re-implementing every published algorithm is neither possible---most descriptions are not complete enough---nor necessary: as \cref{sec:review} showed, the corpus is built on a small number of routing relations combined with a larger number of selection functions. We therefore evaluate \val{cls.n} \emph{routing classes}, \val{cls.nfc} for 3D-FC meshes and \val{cls.nvpc} for VPC stacks, each an exact routing relation with an exact selection function (\cref{tab:classes}). A class represents the surveyed algorithms that share its relation and its kind of selection; where a surveyed algorithm adds features that we do not model (buffer resizing, wireless links, game-theoretic negotiation), we say so in \cref{sec:threats}. All classes share the same router, buffers, VC count (where the class needs fewer VCs than are available, it uses all of them as one class) and random-number streams.
+
+\begin{table}[tbp]
+\centering
+\caption{Evaluated routing classes. VCs: minimum number of virtual channels required. Info: information used by the selection. Escape-based classes use VC~0 with XYZ routing as escape subnetwork (no return) and VC~1 as adaptive channel.}
+\label{tab:classes}
+\scriptsize
+\setlength{\tabcolsep}{2.6pt}
+\begin{tabularx}{\linewidth}{@{}l>{\raggedright\arraybackslash}p{4.1cm}>{\raggedright\arraybackslash}X c>{\raggedright\arraybackslash}p{1.35cm}>{\raggedright\arraybackslash}p{2.9cm}@{}}
+\toprule
+Class & Routing relation & Selection function & VCs & Info & Represents \\
+\midrule
+\cls{XYZ} & dimension order X, Y, Z & -- & 1 & -- & baseline of the corpus \\
+\cls{ZXY} & dimension order Z, X, Y (vertical first) & -- & 1 & -- & AFRA, fault-free mode~\cite{akbari2012afra} \\
+\cls{NF} & 3D negative-first turn model & largest number of free credits & 1 & local & turn models~\cite{glass1992turn,pasricha2011lowoverhead,cai2020mptm,sharma2023prime} \\
+\cls{DyAD} & 3D negative-first & deterministic while the preferred port keeps $\ge25\%$ free credits, adaptive otherwise & 1 & local & DyAD~\cite{hu2004dyad} \\
+\cls{HAM} & Hamiltonian snake labelling, label-monotone moves (may be non-minimal) & minimal moves first, then smallest label gap; credits & 1 & local & HamFA~\cite{ebrahimi2013hamfa}, circular~\cite{alizadeh2014circular} \\
+\cls{O1T} & XYZ on VC class 0 or ZYX on class 1 & order drawn at injection & 2 & -- & O1TURN~\cite{seo2005o1turn} \\
+\cls{ROMM} & two-phase XYZ through a random node of the minimal box & oblivious & 2 & -- & ROMM~\cite{nesson1995romm} \\
+\cls{VAL} & two-phase XYZ through a random node & oblivious & 2 & -- & Valiant~\cite{valiant1981universal} \\
+\cls{FA} & minimal fully adaptive + escape & largest number of free credits & 2 & local & escape-based designs~\cite{khodadadi2022ftpdc,vahdatpanah2019threedep,gaffour2023congestion,jiao2023aftc} \\
+\cls{RCA} & as \cls{FA} & RCA-1D aggregated congestion, weight 0.5 & 2 & regional & RCA~\cite{gratz2008rca}, two-hop schemes \\
+\cls{QR} & as \cls{FA} & Q-routing estimates, learning rate 0.5 & 2 & learned & Q-routing~\cite{boyan1994qrouting}, TTQR, RLARA, BLAR-3D \\
+\cls{TA} & as \cls{FA} & coolest neighbour; temperatures from the compact model every 1000 cycles & 2 & sensors & STTAR, LETHOR, directional TA~\cite{fang2022sttar,safari2022lethor,kaleem2022directional} \\
+\midrule
+\cls{EF} & Elevator-First: up and down virtual networks; same-tier packets keep their VN & nearest elevator & 2 & -- & Elevator-First~\cite{dubois2013elevator}, REDELF~\cite{lee2015redelf} \\
+\cls{EF-R} & as \cls{EF} & nearest healthy elevator & 2 & fault map & resilient elevator routing~\cite{salamat2016resilient,silva2021reflect3d} \\
+\cls{AES-G} & as \cls{EF} & distance $+\,0.5\times$ elevator load (global) & 2 & global & CDA~\cite{fu2019cda}, CTWR, STAR \\
+\cls{AdEle} & as \cls{EF} & 4 nearest elevators; skip-based round robin on EWMA costs ($a=0.2$, $\xi_s=0.05$, threshold 0.1) & 2 & local feedback & AdEle, AdEle+~\cite{taheri2021adele,taheri2023adeleplus} \\
+\cls{FL} & First-Last: positive-first and positive-last VNs, strict VC separation & largest number of free credits within the VN & 2 & local & First-Last~\cite{charif2018firstlast} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Twelve dimensions and their pass criteria}
+\label{sec:dims}
+
+\Cref{tab:protocol} defines the twelve dimensions and their pass criteria. We do not claim that they were pre-registered. They were written down by the authors while the main campaign was running---the criteria file, released with the artefact, is dated 25~October~2026, when most runs had already completed---and they were not deposited with an external registry; we cannot prove that no result beyond a 153-run pilot of the load sweep had been seen when they were written. We therefore present them as fixed analysis rules, applied identically to every class, and \cref{sec:verdict} reports how the verdict moves when every threshold is halved or doubled. The reference class is \cls{XYZ} for 3D-FC classes and \cls{EF} for VPC classes, and dimension \D{7} (structure) is descriptive. One rule that the written criteria do not contain was added when they were applied, because the statistics of a class that deadlocks could only be computed over its surviving runs, which are biased towards light loads: a class that deadlocks in any run of a dimension fails that dimension (marked $^\ddagger$ in the tables). This rule and every other departure from the written criteria are listed in \cref{sec:threats}.
+
+\begin{table}[tbp]
+\centering
+\caption{Evaluation dimensions and pass criteria as written (not externally registered; added rule and deviations in \cref{sec:threats}). Ref.: \cls{XYZ} (3D-FC) or \cls{EF} (VPC).}
+\label{tab:protocol}
+\scriptsize
+\begin{tabularx}{\linewidth}{@{}l>{\raggedright\arraybackslash}p{2.3cm}X@{}}
+\toprule
+Dim. & Property & Pass criterion \\
+\midrule
+\D{1} & Correctness & the channel-dependency checker proves deadlock freedom (acyclic CDG, or acyclic escape subnetwork without return, reachable from every adaptive state) \emph{and} no run of the class, in any group, fails the watchdog or the drain test \\
+\D{2} & Path diversity & more than one admissible path for at least 50\% of ordered pairs (fault-free) \\
+\D{3} & Saturation performance & saturation throughput (highest accepted throughput with $\le1\%$ undelivered) $\ge0.9\times$ ref.\ on uniform traffic \emph{and} $>$ ref.\ on transpose or bit-reversal \\
+\D{4} & Traffic robustness & on each of six patterns (ERA grid), mean latency $\le2\times$ that of the best class \\
+\D{5} & Fault tolerance & 3D-FC: exact pair reachability exceeds the reference's by $\ge0.05$ at $p_h=0.05$ and at $p_v=0.2$ with $\xi\in\{0,4\}$ (partial if only some); VPC: no packet lost in any fault configuration \\
+\D{6} & Load balance and fairness & router-load Jain index $\ge$ ref.\ (uniform, ERA grid) \emph{and} per-source accepted-throughput Jain $\ge0.95$ in every non-deadlocked stress run on uniform traffic \\
+\D{7} & Structure (ERA) & descriptive \\
+\D{8} & Hardware cost & synthesised route/selection logic and storage $\le5\%$ of a two-VC baseline router, and no global information network \\
+\D{9} & Energy & energy per delivered flit $\le1.05\times$ ref.\ in all 27 parameter combinations \\
+\D{10} & Thermal & peak temperature rise $\le$ ref.\ $+0.05$\,K under uniform and hotspot traffic in all four thermal variants \\
+\D{11} & Security & benign-latency inflation factor under flooding $\le$ ref.'s at both benign loads \\
+\D{12} & Robustness of conclusions & sign of the saturation-throughput difference with ref.\ (uniform and transpose) identical in all eight router variants \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Simulation platform}
+\label{sec:platform}
+
+\paragraph{Router and network.} The simulator is cycle-level and models the router of \cref{sec:bg-router}: input-queued, $V$ VCs per port, credit-based flow control, atomic VC reallocation by default, rotating-priority VC allocation and separable input-first round-robin switch allocation. A flit traverses router and link in $H$ cycles ($H=1$ by default) and credits return after a configurable delay. Unless stated otherwise the network is an $8\times8\times4$ mesh (256 routers) with two VCs of eight flits per port and eight-flit packets; VPC stacks keep elevators in the columns with odd $x$ and odd $y$ (16 elevators, stride~2) or, in one group, with $x\equiv y\equiv1 \pmod 4$ (4 elevators, stride~4). Injection is Bernoulli per node with packet injection rate (PIR) in packets/node/cycle; loads are also given in flits/node/cycle. Runs last 18,000 cycles with a 3,000-cycle warm-up unless stated otherwise (12,000 and 2,000 for the sweep, sensitivity and scalability groups; 15,000 for the stress group). Latency is measured from packet creation to tail ejection and therefore includes source queueing; latency statistics cover the packets created in the measurement window except a final guard interval of at least 1,000 cycles, packets delivered during the drain phase count as delivered, and accepted throughput counts the flits ejected in the window. The ERA analysis uses windows of 1,000 cycles.
+
+\paragraph{Traffic.} Six synthetic patterns form the ERA grid: uniform random; transpose, which maps $(x,y,z)$ to $(k_x-1-y,\,k_y-1-x,\,k_z-1-z)$; perfect shuffle, bit-reversal and butterfly, which rotate, reverse, or exchange the most and least significant bits of the node index; and hotspot (20\% of the packets to node $(3,3,1)$, the rest uniform); the self-similar pattern uses ON/OFF sources with Pareto-distributed periods (shape 1.4, mean ON period 40 cycles, burst factor 8)~\cite{willinger1997selfsim}; the flooding scenario adds eight attackers, each injecting 0.05 packets/cycle towards the hotspot node, to benign uniform traffic~\cite{charles2021security}. Synthetic traffic is a limitation (\cref{sec:threats}); trace-driven evaluation~\cite{hestness2010netrace} is part of our agenda (\cref{sec:agenda}).
+
+\paragraph{Common random numbers.} Traffic and routing draw from separate pseudo-random streams. For a given (pattern, load, seed), every class therefore sees exactly the same sequence of packet creations, which makes the paired comparisons of \cref{sec:stats} sharper than independent replications.
+
+\paragraph{Deadlock detection.} A run is declared deadlocked if no flit moves for 2,000 cycles while flits are in flight, \emph{or} if, after injection stops, the network fails to drain within 200,000 cycles. The drain test catches \emph{partial} deadlocks, in which a cycle of blocked packets coexists with traffic that still flows and a global watchdog never fires; every deadlocked run of our campaign was of this kind. For each stuck input VC the simulator dumps the packet, its allocated output and the occupancy of the downstream buffer, from which deadlock witnesses are reconstructed.
+
+\paragraph{Campaigns.} \Cref{tab:campaign} lists the thirteen run groups: \val{n.sim} simulations in total, \val{n.traced} of them with full ERA traces, plus \val{n.val} BookSim runs for validation. The last group was added after an internal audit had shown that the coarse load grid decided several saturation verdicts: for every (class, pattern) pair it halves five times the load interval between the highest stable point of the sweep and the next point, with the seeds and run length of the sweep. Six supplementary experiments, reported where they are used, are not part of these groups: out-of-order delivery (\val{supp.reorder} runs), injection policy (\val{supp.inject}), mesh size (\val{supp.sizes}), pipeline depth (\val{supp.pipe}), equal-priority selection (\val{supp.rsel}) and commitment counting (\val{supp.commit.ours}) with our simulator, and \val{supp.bs.n} BookSim runs (drain tests and commitment counting); they add \val{supp.total.ours} runs of our simulator.
+
+\begin{table}[tbp]
+\centering
+\caption{Simulation campaigns. Loads in packets/node/cycle (PIR) unless stated; U: uniform, T: transpose, BR: bit-reversal, H: hotspot.}
+\label{tab:campaign}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabularx}{\linewidth}{@{}l>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{3.2cm}cr@{}}
+\toprule
+Group & Purpose & Classes & Traffic, loads & Seeds & Runs \\
+\midrule
+era & ERA grid, \D{4}, \D{6}, \D{7}, \D{9}, \D{10} & 12 FC & 6 patterns; 0.001--0.012 (5 loads) & 5 & \val{n.group.era} \\
+era\_vpc & as above, VPC & \cls{EF}, \cls{AES-G}, \cls{AdEle}, \cls{FL} & 6 patterns; 5 loads & 5 & \val{n.group.era_vpc} \\
+sweep & latency--load curves, \D{3} & 12 FC & U, T, BR; 0.016--0.40 flits (11 loads) & 3 & \val{n.group.sweep} \\
+sweep\_vpc & as above, VPC & 4 VPC & U, T, BR; 8 loads & 3 & \val{n.group.sweep_vpc} \\
+stress & overload, deadlock, \D{1}, \D{6} & 16 & U, T, H; 0.24, 0.48, 0.80 flits & 5 & \val{n.group.stress} \\
+sens & eight router variants, \D{12} & 16 & U, T; 0.016 and 0.6 flits & 2 & \val{n.group.sens} \\
+scal & $4^3$, $8{\times}8{\times}4$, $8^3$, $16{\times}16{\times}4$ & 12 FC & U, T, BR; low and overload & 2 & \val{n.group.scal} \\
+dos & flooding attack, \D{11} & 16 & U + 0 or 8 attackers; 0.003, 0.006 & 5 & \val{n.group.dos} \\
+burst & self-similar traffic & 16 & self-similar; 0.003--0.012 & 5 & \val{n.group.burst} \\
+vpcfault & correlated TSV faults, \D{5} & 5 VPC & U, T; $p_v\in\{0.1,0.2\}$, $\xi\in\{0,4\}$ & 5 & \val{n.group.vpcfault} \\
+vpc4 & stride-4 elevators & 4 VPC & U, T; 0.001--0.006 & 3 & \val{n.group.vpc4} \\
+window & ERA window length 250--2000 cycles & \cls{XYZ}, \cls{FA} & U, H; 0.012 & 3 & \val{n.group.window} \\
+sweepref & bisection refinement of saturation, \D{3} (post-audit) & 12 FC, 4 VPC & U, T, BR; 5 halvings of the last interval & 3 & \val{n.group.sweepref.all} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Validation against BookSim}
+\label{sec:validation}
+
+We cross-validated the simulator against BookSim~2~\cite{jiang2013booksim} on $4\times4\times4$ and $8\times8\times8$ meshes---BookSim's mesh requires equal radices---with dimension-order, ROMM, Valiant and minimal adaptive routing with an escape VC, two VCs of eight flits, atomic reallocation (\texttt{wait\_for\_tail\_credit} $=1$) and uniform traffic (\cref{tab:validation}, \val{n.val} runs). Our simulator was run with BookSim's per-hop delay of four cycles and a one-cycle credit delay. Zero-load latencies then differ by a constant \val{val.off.min}--\val{val.off.max} cycles, which BookSim spends in its injection and ejection stages; above this offset, latencies agree within \val{val.nonfa.dev}\% for deterministic and oblivious routing below 80\% of saturation, and saturation loads coincide in \val{val.sat.agree} of the \val{val.sat.n} cases. The exception is minimal adaptive routing, whose latencies deviate by up to \val{val.fa.dev}\% and which saturates later in our simulator on the $4\times4\times4$ mesh: BookSim's routing function offers all minimal adaptive candidates with equal priority, whereas our selection prefers the candidate with most free credits. The comparison of adaptive classes in \cref{sec:results} is internal to our simulator and therefore not affected by this difference of selection.
+
+\begin{table}[tbp]
+\centering
+\caption{Cross-validation against BookSim 2. Saturation load: highest offered load (flits/node/cycle) whose mean latency stays below three times the zero-load latency, applied identically to both simulators. Max.\ dev.: largest relative difference of offset-corrected latency below 80\% of saturation (--: no sweep point in that range).}
+\label{tab:validation}
+\small
+\input{gen/tab_validation.tex}
+\end{table}
+
+\subsection{Mechanised deadlock verification}
+\label{sec:checker}
+
+Deadlock freedom is checked by a channel-dependency checker compiled into the simulator binary; it proves freedom or returns a dependency cycle, which simulation must then confirm as a reachable deadlock. Its central design decision is that it calls the \emph{same} routing-relation function as the simulator; the simulator's selection then restricts the admissible set further, and since the CDG of a sub-relation is a subgraph of the CDG of the relation, a verdict of freedom carries over to the simulated behaviour. \Cref{alg:checker} summarises the procedure. Header state that influences routing---dimension order (\cls{O1T}), intermediate node (\cls{ROMM}, \cls{VAL}), direction and elevator (VPC classes)---is enumerated explicitly; the largest instance explores \val{cdg.states.max} (channel, header) states. The checker also counts dead ends, missing links, non-minimal moves, escape-to-adaptive transitions and adaptive states without an escape option, each of which must be zero (or justified) for the verdict to be valid. A known-unsafe variant of Elevator-First, in which same-tier packets may switch virtual network at every hop, served as a negative test: the checker returns a six-channel cycle across tiers.
+
+\begin{algorithm}[tbp]
+\caption{Channel-dependency verification of a routing class}
+\label{alg:checker}
+\small
+\begin{algorithmic}[1]
+\Require routing relation $\R$ (simulator function \texttt{relation}), mesh, $V$ VCs, escape VC set $E$ (empty if none)
+\State $D\gets(\Ch,\emptyset)$
+\ForAll{destinations $d$ and header contexts $h$}
+  \State $Q\gets$ channels admissible at injection from every source $s\neq d$
+  \While{$Q\neq\emptyset$}
+    \State pop $c$; $r\gets$ downstream router of $c$
+    \ForAll{$(p,\text{mask})\in\R(r,\text{in-port}(c),\text{vc}(c),d,h)$}
+      \ForAll{$v\in\text{mask}$} add edge $c\to(r,p,v)$ to $D$; enqueue $(r,p,v)$ if new \EndFor
+    \EndFor
+    \State \textbf{check} adaptive state $\Rightarrow$ some candidate in $E$; $\text{vc}(c)\in E\Rightarrow$ no candidate outside $E$
+  \EndWhile
+\EndFor
+\If{$D$ acyclic} \Return free (\cref{thm:dally})
+\ElsIf{$E\neq\emptyset$ and $D[E]$ acyclic and both checks hold} \Return free (\cref{thm:duato}, no return)
+\Else{} \Return shortest cycle of $D$ (breadth-first search) as witness
+\EndIf
+\end{algorithmic}
+\end{algorithm}
+
+\Cref{tab:cdg} reports the verdicts. All \val{cdg.proven} classes are proven deadlock-free: thirteen by an acyclic CDG and four by Duato's condition, whose proof assumes atomic VC reallocation (\cref{prop:nonatomic}). The cycles listed for the escape-based classes are cycles of their full relation, which the acyclic escape subnetwork makes harmless under that assumption.
+
+\begin{table}[tbp]
+\centering
+\caption{Channel-dependency verdicts ($8\times8\times4$ mesh, two VCs; VPC with 16 elevators). Shortest cycle: number of channels of the shortest dependency cycle.}
+\label{tab:cdg}
+\small
+\input{gen/tab_cdg.tex}
+\end{table}
+
+\subsection{Analytical models}
+\label{sec:analytical}
+
+\paragraph{Exact reachability under faults.} For each fault map and each ordered pair $(s,d)$ we compute exactly the probability that a packet injected at $s$ reaches $d$ when the routing policy uses only local fault information, by dynamic programming over the routing relation restricted to healthy links: deterministic policies follow their route; oblivious policies average over their random choices; local adaptive policies choose uniformly among healthy admissible ports and fail at a router with none (they cannot backtrack). We also compute an \emph{oracle} variant of each adaptive relation (success if some admissible healthy path exists) and the \emph{connectivity bound}, the probability that $s$ and $d$ are connected in the faulty graph, which no routing algorithm can exceed. Twelve routing policies and the connectivity bound are evaluated on \val{fr.nconf.faulty} fault configurations with 2,000 maps each (\val{n.faultmaps} maps with faults), plus the fault-free reference.
+
+\paragraph{Correlation and partition.} Analytical reliability models of 3D NoCs under TSV failure have a history of their own~\cite{khayambashi2015reliability,salamat2016resilient}; we add spatial correlation and exact per-policy reachability. The copula model \eqref{eq:copula} allows two exact statements.
+
+\begin{theorem}[Correlation and static routes]\label{thm:corr}
+Let a routing policy choose, for each packet, a path independently of the fault map, and let every such path cross each tier boundary at most once. Then the expected pair reachability under the model of \cref{sec:bg-fault} does not depend on $\xi$. Under the same model, the probability that a tier boundary with $m$ vertical links has no healthy link is non-decreasing in $\xi$, and so is the variance of the number of failed links of a boundary.
+\end{theorem}
+
+\begin{proof}
+A path that crosses each boundary at most once uses at most one vertical segment per boundary. Segments of distinct boundaries are independent and each fails with probability $p_v$; planar faults are independent of vertical ones. The survival probability of a fixed path is therefore $(1-p_h)^{\ell_h}(1-p_v)^{\ell_v}$, with $\ell_h$ and $\ell_v$ the numbers of distinct planar and vertical links it uses, whatever $\xi$; averaging over the policy's random choices and over pairs preserves the independence from $\xi$. For the second statement, all links of a boundary fail if and only if $Z_b(x,y)<\Phi^{-1}(p_v)$ for every column; by Slepian's inequality~\cite{slepian1962}, the probability of this orthant event for a Gaussian vector with unit variances is non-decreasing in every pairwise correlation, and every correlation $\exp(-\lVert\cdot\rVert/\xi)$ is non-decreasing in $\xi$. Finally, the variance of the number of failed links is $\sum_i p_v(1-p_v)+\sum_{i\neq j}\bigl(\Phi_2(t,t;\rho_{ij})-p_v^2\bigr)$ with $t=\Phi^{-1}(p_v)$, and the bivariate normal distribution function $\Phi_2(t,t;\rho)$ is increasing in $\rho$ because its derivative with respect to $\rho$ is the bivariate density.
+\end{proof}
+
+The theorem covers \cls{XYZ}, \cls{ZXY}, \cls{O1T}, \cls{ROMM} and static elevator assignment (\cls{EF}, \cls{FL}); it does not cover \cls{VAL}, whose paths may cross a boundary twice, nor adaptive policies, whose choices depend on the faults. Its second part concerns every routing algorithm: a severed boundary partitions the stack. \Cref{tab:partition} quantifies it by Monte Carlo ($2\times10^6$ boundary samples per configuration; exact values for $\xi=0$). For a fully connected $8\times8$ boundary at $p_v=0.2$, correlation length $\xi=4$ raises the probability of a cut from \val{part.full.0.2.0} to \val{part.full.0.2.4}; with four elevators per boundary it rises from \val{part.stride4.0.2.0} to \val{part.stride4.0.2.4}, so that \val{part3.stride4.0.2.4} of such three-boundary stacks would contain at least one severed boundary. Over the configurations of \cref{tab:partition}, independent fault models underestimate the probability of a cut by a factor of \val{part.ratio.stride4.min} to \val{part.ratio.stride4.max} for four elevators per boundary and by many orders of magnitude for denser layouts, where a cut is otherwise negligible. They also hide the dispersion that makes some chips far worse than the average: at $\xi=4$ the standard deviation of the failed fraction is \val{part.sdr.stride4.min}--\val{part.sdr.stride4.max} times its value under independence for four elevators, \val{part.sdr.stride2.min}--\val{part.sdr.stride2.max} times for sixteen and \val{part.sdr.full.min}--\val{part.sdr.full.max} times for 64 links.
+
+\begin{table}[tbp]
+\centering
+\caption{Probability that a tier boundary has no healthy vertical link, and standard deviation of the fraction of failed links per boundary, under the Gaussian-copula model. Monte Carlo with $2\times10^6$ samples for $\xi>0$ (a zero count is reported as the 95\% upper bound $3/n$; values resting on fewer than 20 sampled events are given to one significant digit); $\xi=0$ exact.}
+\label{tab:partition}
+\small
+\input{gen/tab_partition.tex}
+\end{table}
+
+\paragraph{Hardware cost.} Every route-computation and selection unit was written in Verilog and synthesised with Yosys onto the NanGate 45\,nm open cell library (typical corner); four route units (\cls{XYZ}, \cls{ZXY}, \cls{O1T}, \cls{HAM}) were checked against a reference model of the simulator's routing relation on 60 random input vectors each, all of which matched (log in the artefact); the other units were not functionally verified, so their areas estimate a plausible implementation rather than a verified one. Areas of small units are also sensitive to the synthesis context: synthesising each unit from a file that contains only the unit and its submodules, instead of the file of all units, changes its area by up to \val{hw.ctx.max}\% (\val{hw.ctx.unit}), which moves no overhead by more than \val{hw.ctx.pp} percentage points and changes no \D{8} verdict; reversing the order of the modules in the file changes no area. Per-router cost is seven route units (one per input port) plus shared selection state; storage is costed at the area of a D flip-flop (DFF\_X1, 4.522\,$\mu$m$^2$ per bit) and extra flit width at the corresponding fraction of buffer and crossbar area. The baseline is a two-VC router with fourteen eight-flit, 64-bit VC FIFOs, a $7\times7$ crossbar and seven XYZ route units, \val{hw.base}\,$\mu$m$^2$. Table-free, logic-based route computation is known to be cheap~\cite{rodrigo2011ulbdr}; our numbers confirm it for every class without tables. Allocators are excluded because they are common to all classes; including them would lower every relative overhead, so our percentages are conservative.
+
+\paragraph{Energy.} Energy per delivered flit is
+\begin{equation}\label{eq:energy}
+E=\frac{N_{\mathrm{xbar}}\,e_r+N_{\mathrm{pl}}\,e_l+N_{\mathrm{v}}\,e_v+E_{\mathrm{aux}}+\lambda\,S\,N\,\tau}{F_{\mathrm{del}}},
+\end{equation}
+with $N_{\mathrm{xbar}}$, $N_{\mathrm{pl}}$ and $N_{\mathrm{v}}$ the crossbar, planar-link and vertical-link traversals counted by the simulator, $e_r=1$ the reference energy of a crossbar traversal, $E_{\mathrm{aux}}$ the Q-routing update messages (one per update, charged as $0.1\,e_r$ plus $16/64$ of a planar link traversal) and the seven-bit RCA side band (activity 0.1)---the slowly varying 8-bit temperature side band of \cls{TA} is not charged---, $\lambda$ the leakage per buffer slot and cycle, $S$ the slots per router, $N$ the routers, $\tau$ the measurement window and $F_{\mathrm{del}}$ the delivered flits. We vary $e_l\in\{0.25,0.5,1\}$, $e_v\in\{0.05,0.2,0.5\}$ and $\lambda\in\{0,5\times10^{-4},2\times10^{-3}\}$: 27 combinations, which span technology-dependent ratios rather than commit to one tool's absolute values~\cite{sun2012dsent}. For minimal routing the counts $N_{\mathrm{pl}}$ and $N_{\mathrm{v}}$ are fixed by the traffic matrix, so minimal classes without side channels have exactly the reference energy below saturation; this is a property of the model, not a measurement artefact.
+
+\paragraph{Temperature.} A compact steady-state model solves $GT=P$ on the tile grid, with lateral conductance $g_{\mathrm{lat}}=6\times10^{-3}$\,W/K, inter-tier conductance $g_{\mathrm{v}}=0.14$\,W/K and a sink conductance $0.0625$\,W/K under tier~0; tile power is $0.25$\,W (core) $+\,0.01$\,W (leakage) $+\,30$\,pJ per crossbar traversal at 1\,GHz. Three variants stress the network's share of power (NoC-heavy: core 0.10\,W, 60\,pJ/flit), weak vertical conduction ($g_{\mathrm{v}}/3$) and strong lateral spreading ($3g_{\mathrm{lat}}$). The model is coarse by design; it estimates the \emph{leverage} of routing on temperature, not absolute temperatures, which require tools such as 3D-ICE~\cite{sridhar2010ice}.
+
+\subsection{Statistical methodology}
+\label{sec:stats}
+
+Every reported statistic is a mean over seeds (5 seeds for the two ERA grids and the stress, DoS, burst and VPC-fault groups; 2--3 otherwise) with 95\% Student-$t$ intervals in the supplementary data. Pairwise comparisons use the matched design: the same (pattern, load, seed) triple for both classes, both runs free of deadlock. We report the median relative difference, the paired dominance statistic $\delta=\Pr(a>b)-\Pr(a<b)$ over matched pairs (the paired analogue of Cliff's delta~\cite{cliff1993dominance}) with a 95\% percentile bootstrap interval (2,000 resamples), and two-sided Wilcoxon signed-rank tests~\cite{wilcoxon1945} with Holm correction over the family of \val{st.n.tests} comparisons~\cite{holm1979}. ERA permutation tests are corrected with the Benjamini--Hochberg procedure over all traced runs~\cite{benjamini1995fdr}. Pass/fail verdicts are deterministic functions of the reported statistics; their sensitivity to the thresholds is analysed in \cref{sec:verdict}.

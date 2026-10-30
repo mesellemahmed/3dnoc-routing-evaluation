@@ -1,0 +1,26 @@
+
+6. Printing statistics.
+
+=== rca_agg ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+      125        - wires
+      290        - wire bits
+        9        - public wires
+      174        - public wire bits
+        3        - ports
+      126        - port bits
+      158    199.5 cells
+       24   25.536   AND2_X1
+       18   19.152   AOI21_X1
+       18   14.364   NAND2_X1
+        8    6.384   NOR2_X1
+       18   19.152   OAI21_X1
+       18   28.728   XNOR2_X1
+       54   86.184   XOR2_X1
+
+   Chip area for module '\rca_agg': 199.500000
+     of which used for sequential elements: 0.000000 (0.00%)
+

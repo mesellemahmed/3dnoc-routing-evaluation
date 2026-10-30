@@ -1,0 +1,332 @@
+% =====================================================================
+\section{Results}
+\label{sec:results}
+
+We report the results by research question. Every number in this section is generated from the raw results by the script released with the artefact; tables mark the best value of each column in bold and the second best underlined, within the topology family.
+
+% ---------------------------------------------------------------------
+\subsection{RQ1: correctness (\D{1})}
+\label{sec:rq-correct}
+
+\Cref{tab:d1} confronts the checker's verdicts with \val{n.sim} simulations. The two agree wherever the checker's assumptions hold: no class deadlocked under atomic reallocation (\val{dl.esc.atomic.k} deadlocks in \val{dl.esc.atomic.n} runs of the escape-based classes alone). The criterion of \D{1} counts every run of a class, whatever the router variant. Under it, the four escape-based classes (\val{d1.cond.classes}) fail \D{1}, because they deadlock when VCs are reallocated non-atomically, a router configuration excluded by the assumptions of \cref{thm:duato}; \cref{tab:verdict} marks them with~$^{\S}$. Their correctness is conditional on atomic reallocation. \val{d1.pass.n} classes pass unconditionally.
+
+\begin{table}[tbp]
+\centering
+\caption{Correctness (\D{1}). Deadlocked runs over all groups, separated by VC reallocation policy (non-atomic runs: non-atomic variant of the sensitivity group; --: no run).}
+\label{tab:d1}
+\small
+\input{gen/tab_d1.tex}
+\end{table}
+
+\paragraph{Escape channels under non-atomic reallocation.} The four escape-based classes are proven deadlock-free, and none deadlocked under atomic reallocation. Under non-atomic reallocation, \val{dl.esc.na.over.k} of their \val{dl.esc.na.over.n} overload runs deadlocked---every class at least twice in four runs---while none of the low-load runs did. All these deadlocks were partial, with \val{dl.esc.na.stuck.min}--\val{dl.esc.na.stuck.max} flits stuck: the rest of the network kept delivering packets, so a global watchdog would have declared the runs healthy and only the drain test detected them. The dump of the stuck VCs shows the mechanism of \cref{prop:nonatomic} (\cref{fig:witness}): four adaptive VC buffers around a square of the Y--Z plane are full, each with one complete eight-flit packet whose head has already been granted the adaptive VC of the next router; the escape VCs of all four routers are free but unreachable, because every head is committed. The hazard does not depend on the mesh: with \cls{FA} at overload, \val{na.size.4x4x4}, \val{na.size.8x8x8} and \val{na.size.8x8x4} runs deadlocked on $4\times4\times4$, $8\times8\times8$ and $8\times8\times4$ meshes; and it persists with deeper router pipelines (\val{na.pipe.h3.8x8x4} runs with a three-cycle hop and \val{na.pipe.h4.8x8x4} with a four-cycle hop on the $8\times8\times4$ mesh, \val{na.pipe.h4.8x8x8} with a four-cycle hop on $8\times8\times8$).
+
+\begin{figure}[tbp]
+\centering
+\begin{tikzpicture}[
+  rtr/.style={draw=black,fill=black!4,rounded corners=2pt,minimum width=2.6cm,minimum height=1.2cm,align=center,font=\scriptsize},
+  slot/.style={draw=black!70,fill=acc!55,minimum width=0.17cm,minimum height=0.3cm,inner sep=0pt},
+  com/.style={-{Stealth[length=5pt]},line width=1.1pt,draw=acc},
+  lab/.style={font=\scriptsize,inner sep=1.5pt}]
+\node[rtr] (A) at (0,0) {router 83, $(3,2,1)$\\ escape VC0: empty};
+\node[rtr] (B) at (7.2,0) {router 91, $(3,3,1)$\\ escape VC0: empty};
+\node[rtr] (C) at (7.2,4.2) {router 155, $(3,3,2)$\\ escape VC0: empty};
+\node[rtr] (D) at (0,4.2) {router 147, $(3,2,2)$\\ escape VC0: empty};
+% input VC1 buffers, eight slots each, full
+\foreach \i in {0,...,7} \node[slot] at (4.35+\i*0.19,0) {};      % B, from A (north link)
+\foreach \i in {0,...,7} \node[slot] at (6.535+\i*0.19,3.15) {};  % C, from B (up link)
+\foreach \i in {0,...,7} \node[slot] at (1.45+\i*0.19,4.2) {};    % D, from C (south link)
+\foreach \i in {0,...,7} \node[slot] at (-0.665+\i*0.19,1.05) {}; % A, from D (down link)
+\draw[com] (A.east) -- node[lab,below]{N, VC1} (4.25,0);
+\draw[com] (B.north) -- node[lab,right]{Up, VC1} (7.2,2.98);
+\draw[com] (C.west) -- node[lab,above]{S, VC1} (2.97,4.2);
+\draw[com] (D.south) -- node[lab,left]{Down, VC1} (0,1.22);
+\node[font=\scriptsize,text width=5.4cm,align=center] at (3.6,2.1) {each input VC1 buffer (\textcolor{acc}{$\blacksquare$}) holds one complete 8-flit packet whose head has been granted VC1 of the next router;\\ the free escape VCs are unreachable};
+\end{tikzpicture}
+\caption{Deadlock witness for minimal adaptive routing with an escape subnetwork under non-atomic VC reallocation (\cls{FA}, $8\times8\times4$ mesh, overload). The cycle lies in the Y--Z plane $x=3$; a second, disjoint cycle was found in the plane $x=0$ of the same run.}
+\label{fig:witness}
+\end{figure}
+
+\paragraph{BookSim, and why the absence of deadlock there is no guarantee.} BookSim's minimal adaptive routing function has the same routing relation and escape VC as \cls{FA}, and its rule for VC availability under non-atomic reuse (\texttt{wait\_for\_tail\_credit} $=0$) is the same as ours. Yet it completed all \val{na.bs.n} of our batch-mode drain tests (uniform, transpose and bit-reversal traffic on the $4\times4\times4$ mesh, uniform and bit-reversal on $8\times8\times8$; full injection; up to \val{na.bs.maxcycles} cycles) without deadlock, whereas our simulator deadlocked in most comparable runs, including with BookSim's four-cycle hop and with its equal-priority choice among adaptive candidates (\val{na.rsel.8x8x4} runs on $8\times8\times4$, \val{na.rsel.8x8x8} on $8\times8\times8$ with a four-cycle hop). Instrumenting both simulators shows that the hazard is the same and only its frequency differs. Both grant heads adaptive VCs whose downstream buffer is full---the commitment of \cref{prop:nonatomic}---but BookSim does so in \val{na.commit.booksim.888}\% of its VC allocations on the $8\times8\times8$ mesh at full injection (\val{na.commit.booksim.444}\% on $4\times4\times4$), against \val{na.commit.ours.888.h4}\% for our router with the same hop delay (\val{na.commit.ours.444.h4}\% on $4\times4\times4$); since a deadlock requires a closed cycle of such commitments, its probability falls much faster than the commitment rate. We did not isolate the cause of the lower rate. It is not the injection rule: in both simulators a packet may take an adaptive VC at its source router (BookSim's routing function ignores the injection VC), and both rates were measured under this common rule. Plausible causes are BookSim's separate VC- and switch-allocation stages and its allocator, which we did not vary. The frequency is sensitive to incidental details: confining half of the packets to the escape network from their source, a policy that neither simulator uses by default, removed the deadlock from our runs (\val{na.inj1.k} of \val{na.inj1.n} deadlocked, against \val{na.inj0.k} of \val{na.inj0.n} under the default rule). None of this is a guarantee: BookSim reaches the precondition of the deadlock in about one VC allocation in ten, \cref{prop:nonatomic} shows that the commitment cycle is a legal state, and \cref{fig:witness} shows that it is reachable. A design that relies on \cref{thm:duato} must use atomic reallocation, or a scheme such as whole-packet forwarding~\cite{ma2012wpf} that restores its assumption.
+
+% ---------------------------------------------------------------------
+\subsection{RQ2: performance and robustness (\D{2}, \D{3}, \D{4}, \D{6}, \D{12})}
+\label{sec:rq-perf}
+
+\paragraph{Path diversity (\D{2}).} \Cref{tab:d2} gives the exact path counts. Dimension-order routing admits one path per pair; the fully adaptive relations admit all minimal paths ($\alpha=1$) and more than one for \val{d2.fa.multi}\% of the pairs; negative-first admits on average \val{d2.nf.alpha} of the minimal paths but more than one for \val{d2.nf.multi}\% of pairs; the Hamiltonian relation, which may leave the minimal box, admits \val{d2.ham.median} paths for the median pair. Among VPC classes, elevator-first relations route deterministically once the elevator is chosen, whereas the elevator choice of \cls{AES-G} and \cls{AdEle} creates alternatives for \val{d2.aesg.multi}\% of the pairs. Path diversity is necessary for fault tolerance but, as the next paragraphs show, it is a poor predictor of performance.
+
+\begin{table}[tbp]
+\centering
+\caption{Path diversity (\D{2}), exact enumeration on the fault-free mesh. $\alpha$: mean fraction of minimal paths admitted (undefined for non-minimal and VPC relations).}
+\label{tab:d2}
+\small
+\input{gen/tab_d2.tex}
+\end{table}
+
+\paragraph{Saturation throughput (\D{3}).} \Cref{tab:d3fc,fig:curves} show the classic trade-off with unusual clarity. After the bisection refinement, every saturation throughput is bracketed to within \val{d3.bracket.max}\% (median \val{d3.bracket.median}\%) by the next unstable load; ratios below are point estimates, with the range allowed by the brackets in parentheses. On uniform traffic, \cls{XYZ}, \cls{ZXY}, \cls{FA}, \cls{RCA}, \cls{QR} and \cls{TA} saturate within four percent of each other (\val{d3.sat.ta.random}--\val{d3.sat.xyz.random} flits/node/cycle), because uniform traffic is already balanced by dimension-order routing. On permutations, adaptivity pays: on bit-reversal \cls{FA} saturates at \val{d3.br.fa.over.xyz} times the load of \cls{XYZ} (\val{d3.br.fa.over.xyz.lo}--\val{d3.br.fa.over.xyz.hi}), and on transpose at \val{d3.tr.fa.over.xyz} times (\val{d3.tr.fa.over.xyz.lo}--\val{d3.tr.fa.over.xyz.hi}). The partially adaptive turn-model and Hamiltonian classes do not have this advantage; on uniform traffic they saturate well below \cls{XYZ} (\val{d3.sat.nf.random} and \val{d3.sat.ham.random}), because their asymmetric adaptiveness concentrates traffic. Oblivious routing pays its average distance: \cls{VAL} saturates at \val{d3.sat.val.random}. Vertical-first routing (\cls{ZXY}) multiplies \cls{XYZ}'s bit-reversal saturation throughput by \val{d3.br.zxy.over.xyz} (\val{d3.br.zxy.over.xyz.lo}--\val{d3.br.zxy.over.xyz.hi}) with the same single VC, at a small cost on transpose (\val{d3.sat.zxy.transpose1} against \val{d3.sat.xyz.transpose1}) and at overload (\val{d3.mst.zxy.transpose1} against \val{d3.mst.xyz.transpose1} on transpose). Beyond saturation, adaptive classes lose throughput (overload columns of \cref{tab:d3fc}) whereas dimension-order routing does not: \cls{FA} accepts \val{d3.mst.fa.random} flits/node/cycle at overload against \val{d3.mst.xyz.random} for \cls{XYZ}. The uniform condition of \D{3} requires at least \val{d3.thr.unif} flits/node/cycle; one verdict lies within the residual uncertainty of the brackets, because its bracket overlaps that of the threshold: \cls{O1T} fails at \val{d3.sat.o1t.random}.
+
+\begin{table}[tbp]
+\centering
+\caption{Performance of 3D-FC classes (\D{3}). Zero-load latency at PIR 0.002; saturation throughput in flits/node/cycle (highest accepted throughput with at most 1\% undelivered and no deadlock, over the coarse sweep and its bisection refinement); overload throughput accepted at an offered load of 0.6 flits/node/cycle.}
+\label{tab:d3fc}
+\small
+\input{gen/tab_d3_fc.tex}
+\end{table}
+
+\begin{figure}[tbp]
+\centering
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size=3 by 1,horizontal sep=1.15cm},
+  width=0.355\linewidth,height=5.1cm,xmin=0,ymin=10,ymax=150,
+  xlabel={offered load (flits/node/cycle)},
+  tick label style={font=\scriptsize},label style={font=\scriptsize},title style={font=\small},
+  every axis plot/.append style={line width=0.8pt,mark size=1.4pt}]
+\nextgroupplot[title={uniform},ylabel={mean latency (cycles)},xmax=0.36,
+  legend to name=curveleg,legend columns=7,legend style={font=\scriptsize,draw=none}]
+\curveplot{c6,mark=*}{xyz}{random}\addlegendentry{XYZ}
+\curveplot{c2,mark=square*}{zxy}{random}\addlegendentry{ZXY}
+\curveplot{c3,mark=triangle*}{nf}{random}\addlegendentry{NF}
+\curveplot{c4,mark=diamond*}{ham}{random}\addlegendentry{HAM}
+\curveplot{c5,mark=pentagon*}{o1t}{random}\addlegendentry{O1T}
+\curveplot{black!50,dashed,mark=o}{val}{random}\addlegendentry{VAL}
+\curveplot{c1,mark=*,mark options={fill=white}}{fa}{random}\addlegendentry{FA}
+\nextgroupplot[title={transpose},xmax=0.27]
+\curveplot{c6,mark=*}{xyz}{transpose1}
+\curveplot{c2,mark=square*}{zxy}{transpose1}
+\curveplot{c3,mark=triangle*}{nf}{transpose1}
+\curveplot{c4,mark=diamond*}{ham}{transpose1}
+\curveplot{c5,mark=pentagon*}{o1t}{transpose1}
+\curveplot{black!50,dashed,mark=o}{val}{transpose1}
+\curveplot{c1,mark=*,mark options={fill=white}}{fa}{transpose1}
+\nextgroupplot[title={bit-reversal},xmax=0.29]
+\curveplot{c6,mark=*}{xyz}{bitreversal}
+\curveplot{c2,mark=square*}{zxy}{bitreversal}
+\curveplot{c3,mark=triangle*}{nf}{bitreversal}
+\curveplot{c4,mark=diamond*}{ham}{bitreversal}
+\curveplot{c5,mark=pentagon*}{o1t}{bitreversal}
+\curveplot{black!50,dashed,mark=o}{val}{bitreversal}
+\curveplot{c1,mark=*,mark options={fill=white}}{fa}{bitreversal}
+\end{groupplot}
+\end{tikzpicture}
+\pgfplotslegendfromname{curveleg}
+\caption{Latency--load curves of eight 3D-FC classes ($8\times8\times4$, coarse sweep, mean of three seeds; points with more than 1\% undelivered packets, with deadlock or with a mean latency above 150 cycles omitted). Adaptivity buys throughput on permutations; on uniform traffic dimension-order routing is as good as any.}
+\label{fig:curves}
+\end{figure}
+
+Among VPC classes (\cref{tab:d3vpc}), saturation throughput is limited by the elevators: \cls{EF} saturates at \val{d3.sat.ef.random} flits/node/cycle on uniform traffic, less than a quarter of the fully connected mesh, and global-load elevator selection (\cls{AES-G}) raises it to \val{d3.sat.aesg.random}, whereas \cls{AdEle}'s local selection reaches \val{d3.sat.adele.random} and First-Last \val{d3.sat.fl.random}.
+
+With four elevators instead of sixteen (\cref{tab:vpc4}), every VPC class saturates before PIR 0.006 (between \val{vpc4.und.min}\% and \val{vpc4.und.max}\% of the packets undelivered) and the ranking changes. Global elevator selection is still the fastest on uniform traffic, but on transpose First-Last, whose planar sub-routes are adaptive, has the lowest latency at PIR 0.003 (\val{vpc4.fl.transpose1.0.003} cycles against \val{vpc4.ef.transpose1.0.003} for \cls{EF} and \val{vpc4.aesg.transpose1.0.003} for \cls{AES-G}), and \cls{AdEle} saturates first. Global elevator selection pays when there are enough elevators to balance; when every elevator is a bottleneck, planar adaptivity around the elevators matters more.
+
+\begin{table}[tbp]
+\centering
+\caption{Performance of VPC classes (\D{3}), 16 elevators; definitions as in \cref{tab:d3fc}.}
+\label{tab:d3vpc}
+\small
+\input{gen/tab_d3_vpc.tex}
+\end{table}
+
+\begin{table}[tbp]
+\centering
+\caption{VPC classes with four elevators (stride 4): mean latency (cycles), three seeds. $^\ast$More than 1\% of the packets undelivered (saturated; latency of delivered packets only, not ranked).}
+\label{tab:vpc4}
+\small
+\input{gen/tab_vpc4.tex}
+\end{table}
+
+\paragraph{Traffic robustness (\D{4}).} Saturation throughput describes one load; \D{4} asks whether a class remains competitive over the whole ERA grid of six patterns and five loads (\cref{tab:d4fc,tab:d4vpc}). Only \cls{ZXY} passes among 3D-FC classes, with a worst ratio of \val{d4.zxy.ratio} to the best class (\val{d4.zxy.worst}). Every adaptive class fails on hotspot traffic: \cls{FA} is \val{d4.hot.fa.over.xyz} times slower than \cls{XYZ} there, and \cls{NF} \val{d4.hot.nf.over.xyz} times. These verdicts rest on a saturated regime. With 20\% of the packets sent to one node, the hot node is oversubscribed from PIR 0.003 on; on average \val{d4.fc.hot.und.0.003}\%, \val{d4.fc.hot.und.0.006}\%, \val{d4.fc.hot.und.0.009}\% and \val{d4.fc.hot.und.0.012}\% of the hotspot packets created in the window are undelivered at PIR 0.003, 0.006, 0.009 and 0.012, and latency covers delivered packets only. The hotspot column therefore compares classes under persistent local overload, not below saturation. Without it, \val{d4.fc.nohot.nflips} 3D-FC classes would pass \D{4} (\val{d4.fc.nohot.flips}; \cls{FA}: \val{d4.fa.ratio.nohot}), whereas \cls{XYZ}, \cls{O1T}, \cls{DyAD} and \cls{VAL} would still fail. A plausible mechanism, which we did not isolate, is tree saturation spread by adaptivity: adaptive packets distribute the congestion around the hot node over all minimal paths towards it, so that background traffic crossing that region is blocked in every dimension instead of one. \cls{XYZ} fails on bit-reversal, where it is \val{d4.br.xyz.over.zxy} times slower than \cls{ZXY}, and \cls{O1T} also fails there (\val{d4.o1t.ratio}$\times$). Among VPC classes only \cls{AES-G} passes (\val{d4.aesg.ratio}$\times$, worst on transpose); \cls{EF}, \cls{AdEle} and \cls{FL} exceed the best class by factors of \val{d4.ef.ratio}, \val{d4.adele.ratio} and \val{d4.fl.ratio}.
+
+\begin{table}[tbp]
+\centering
+\caption{Traffic robustness of 3D-FC classes (\D{4}). Mean latency (cycles) of delivered packets over five loads and five seeds; worst ratio to the best class of the family. Hotspot runs are saturated at PIR $\ge0.003$.}
+\label{tab:d4fc}
+\small
+\setlength{\tabcolsep}{4pt}
+\input{gen/tab_d4_fc.tex}
+\end{table}
+
+\begin{table}[tbp]
+\centering
+\caption{Traffic robustness of VPC classes (\D{4}); definitions as in \cref{tab:d4fc}.}
+\label{tab:d4vpc}
+\small
+\setlength{\tabcolsep}{4pt}
+\input{gen/tab_d4_vpc.tex}
+\end{table}
+
+Self-similar traffic (\cref{tab:burst}) sharpens the picture at the tail. At PIR 0.012 the minimal adaptive classes have the lowest 99th-percentile latency (\cls{FA}: \val{d4.burst.fa.p99} cycles against \val{d4.burst.xyz.p99} for \cls{XYZ}), Valiant's tail explodes (\val{d4.burst.val.p99}). In VPC stacks bursty traffic saturates the elevators: at PIR 0.009 only global elevator selection remains stable (\val{d4.burst.aesg.lat9} cycles, against \val{d4.burst.ef.und9}\% of the packets undelivered for \cls{EF} and \val{d4.burst.adele.und9}\% for \cls{AdEle}), and at PIR 0.012 every VPC class is saturated.
+
+\begin{table}[tbp]
+\centering
+\caption{Self-similar (ON/OFF Pareto) traffic: mean and 99th-percentile latency (cycles), five seeds. $^\ast$More than 1\% of the packets undelivered (saturated; delivered packets only, not ranked).}
+\label{tab:burst}
+\small
+\input{gen/tab_burst.tex}
+\end{table}
+
+\paragraph{Load balance and fairness (\D{6}).} No class passes \D{6} (\cref{tab:d6}). On router load, dimension-order routing balances uniform traffic best (Jain index \val{d6.xyz.jain} for \cls{XYZ}, \val{d6.zxy.jain} for \cls{ZXY} and \cls{O1T}); the partially adaptive and oblivious classes are lower (\val{d6.nf.jain} for \cls{NF}, \val{d6.romm.jain} for \cls{ROMM}), and the VPC classes, whose elevators concentrate load by construction, lower still (\val{d6.ef.jain} for \cls{EF}). The fairness condition fails for every class: the minimum over stress runs of the per-source accepted-throughput Jain index is at most \val{d6.best.src.v} (\cls{\val{d6.best.src}}) among classes that do not deadlock---individual runs at the lowest stress load reach \val{d6.srcjain.maxrun}---and the longest wait for VC allocation exceeds 10,000 cycles, two thirds of the run, in \val{d6.va.over10k} classes. The routing class matters: the minimum ranges from \val{d6.srcjain.min.lo} (\cls{\val{d6.srcjain.min.lo.class}}) to \val{d6.best.src.v}, with \cls{XYZ} at \val{d6.xyz.srcjain} and \cls{FA} at \val{d6.fa.srcjain}. That no class reaches 0.95 is consistent with the parking-lot effect of the locally fair round-robin arbitration that all classes share (\cref{sec:bg-router}); whether age-based or frame-based arbitration would let some class pass is untested here.
+
+\begin{table}[tbp]
+\centering
+\caption{Load balance and fairness (\D{6}). Router-load Jain index on uniform traffic (ERA grid); per-source accepted-throughput Jain index (minimum) and max/mean source latency (mean) over stress runs on uniform traffic; longest VC-allocation wait.}
+\label{tab:d6}
+\small
+\input{gen/tab_d6.tex}
+\end{table}
+
+\paragraph{Robustness of conclusions (\D{12}).} \Cref{tab:d12} re-runs every class under eight router variants. Conclusions about uniform traffic are robust: every class keeps the sign of its difference with the reference in all variants. Conclusions about transpose are not: \val{d12.nflips} classes change sign in at least one variant (\val{d12.flips}). Under the deadlock rule, the escape-based classes, which deadlocked under non-atomic reallocation, fail \D{12} as well. Two limits apply. The depth-16 variant is degenerate: with atomic reallocation and eight-flit packets a VC buffer never holds more than one packet, so slots beyond the eighth are never used, and its results equal the baseline's in \val{d12.d16.same} of \val{d12.d16.n} runs (all except overload runs of \cls{\val{d12.d16.diff.classes}}); \D{12} therefore rests on seven effective variants. And the sign test uses two seeds without a noise tolerance; the median seed-to-seed standard deviation of overload throughput is \val{d12.seed.sd.median} flits/node/cycle, and treating differences below 0.01 as ties would let four more classes pass (\cref{tab:thresh}). Doubling the VCs, for instance, raises the overload throughput of \cls{XYZ} from \val{d12.xyz.base} to \val{d12.xyz.v4} flits/node/cycle but lowers that of \cls{FA} from \val{d12.fa.base} to \val{d12.fa.v4}; non-atomic reallocation raises it for almost every class (\cls{FA}: \val{d12.fa.na}) while making the escape-based ones deadlock. Claims that an adaptive selection beats a deterministic one on a permutation are, in other words, conditional on the router; papers should report them with the router parameters that produced them.
+
+\begin{table}[tbp]
+\centering
+\caption{Robustness of conclusions (\D{12}). Accepted throughput at overload (uniform, offered 0.6 flits/node/cycle, two seeds) under eight router variants, and number of variants in which the class is above/below the reference on uniform and transpose traffic (exact ties counted in neither column). $^\ddagger$At least one deadlocked run.}
+\label{tab:d12}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\input{gen/tab_d12.tex}
+\end{table}
+
+\paragraph{Scalability.} \Cref{tab:scal} varies the mesh from 64 to 1,024 routers. Size changes the ranking at overload. On uniform traffic the minimal adaptive classes accept the most traffic only on the smallest mesh; from $8\times8\times4$ upwards dimension-order routing accepts more (\cls{XYZ}: \val{d12.scal.xyz.random.16164}, \cls{ZXY}: \val{d12.scal.zxy.random.16164}, \cls{FA}: \val{d12.scal.fa.random.16164} flits/node/cycle on $16\times16\times4$). On bit-reversal the minimal adaptive classes with escape (\cls{FA}, \cls{RCA}, \cls{QR}, \cls{TA}) lead on three of the four meshes, within one percent of each other, but on $8\times8\times8$ \cls{ZXY} accepts as much (\cls{ZXY}: \val{d12.scal.zxy.bitreversal.888}, \cls{FA}: \val{d12.scal.fa.bitreversal.888}). On transpose \cls{O1T} leads on every mesh except the smallest (\val{d12.scal.o1t.transpose1.16164} against \val{d12.scal.fa.transpose1.16164} for \cls{FA} on $16\times16\times4$).
+
+\begin{table}[tbp]
+\centering
+\caption{Scalability: accepted throughput at overload (offered 0.6 flits/node/cycle; flits/node/cycle) for four mesh sizes, two seeds.}
+\label{tab:scal}
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\input{gen/tab_scal.tex}
+\end{table}
+
+% ---------------------------------------------------------------------
+\subsection{RQ3: fault tolerance (\D{5})}
+\label{sec:rq-fault}
+
+\Cref{tab:d5fc} gives the exact reachability of every 3D-FC policy, averaged over 2,000 fault maps per configuration. Four results stand out.
+
+\emph{Under planar faults a single path is fragile and a long one more so; adaptivity recovers much of the loss, and locality limits the recovery.} At $p_h=0.1$, \cls{XYZ} delivers \val{d5.xyz.0.1.0.0} of the pairs and \cls{VAL} only \val{d5.val.0.1.0.0}; local minimal adaptive routing \val{d5.min_greedy.0.1.0.0}; the oracle version of the same relation \val{d5.min_oracle.0.1.0.0}; and the connectivity bound is \val{d5.connected.0.1.0.0}. The gap between local and oracle variants---\val{d5.min_greedy.0.1.0.0} versus \val{d5.min_oracle.0.1.0.0}---is the price of making decisions without knowing the faults ahead; closing it requires fault information beyond the neighbourhood or the ability to backtrack.
+
+\emph{Vertical faults favour different policies than planar faults.} Ordering the minimal ports as X, Y, Z is the best local policy under planar faults (\val{d5.min_order.0.1.0.0} at $p_h=0.1$) and no better than \cls{XYZ} under vertical faults (\val{d5.min_order.0.0.2.0} at $p_v=0.2$): taking the vertical hop last leaves no alternative when it fails. The Hamiltonian policy, which may leave the minimal box, is the most robust local policy under vertical faults (\val{d5.ham_greedy.0.0.2.0}).
+
+\emph{Correlation hurts the policies that adapt.} As \cref{thm:corr} predicts, the reachability of the policies it covers is unchanged by correlation (\cls{XYZ}: \val{d5.corr.xyz.0.2} at $p_v=0.2$, within Monte Carlo error); \cls{VAL}, whose two-phase paths may cross a boundary twice and which the theorem does not cover, gains slightly (\val{d5.val.0.0.2.0} to \val{d5.val.0.0.2.4}). Local adaptive policies lose: \val{d5.corr.min_greedy.0.2} for minimal adaptive routing and \val{d5.corr.ham_greedy.0.2} for the Hamiltonian policy at $p_v=0.2$, and up to \val{d5.corr.min_greedy.0.3} at $p_v=0.3$. Clustered faults remove the alternatives that adaptive routing counts on: the healthy columns next to a failed one are likely to have failed too. A fault-tolerance claim established under independent faults overstates the benefit of adaptivity, although in our configurations the overstatement does not change any \D{5} verdict or the ranking of the policies.
+
+\emph{Under moderate faults the losses are the routing's, not the topology's---until the stack partitions.} The connectivity bound is at least \val{d5.conn.min} in every configuration of \cref{tab:d5fc}, so the losses of all policies are self-inflicted. But the bound hides the partition risk quantified in \cref{tab:partition}, which is negligible for independent faults and not for correlated ones.
+
+\begin{table}[tbp]
+\centering
+\caption{Fault tolerance of 3D-FC policies (\D{5}): exact mean pair reachability over 2,000 fault maps per configuration ($8\times8\times4$). Planar faults with probability $p_h$; vertical faults with marginal $p_v$ and correlation length $\xi$. Local: uniform choice among healthy admissible ports, no backtracking; oracle: some admissible healthy path exists.}
+\label{tab:d5fc}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\input{gen/tab_d5_fc.tex}
+\end{table}
+
+\paragraph{VPC stacks.} In simulation (\cref{tab:d5vpc}), static elevator assignment loses every packet whose elevator column is broken: \cls{EF} and \cls{FL} drop \val{d5.vpc.ef.0.2.0.drop} of all packets at $p_v=0.2$, and \cls{AdEle}, whose offline subsets do not know the faults, \val{d5.vpc.adele.0.2.0.drop}. Only fault-aware selection is lossless: \cls{EF-R} redirects packets to the nearest healthy elevator at a high latency cost (\val{d5.vpc.efr.0.2.0.lat} cycles against \val{d5.vpc.aesg.0.2.0.lat} for \cls{AES-G}), and \cls{AES-G}, whose global view includes the fault map, is both lossless and fast. Five fault maps per configuration are a small sample, so we computed the exact expected loss of \cls{EF} under uniform traffic for each map, by replaying the simulator's fault sampler: each of the 20 simulated \cls{EF} runs under uniform traffic lies within \val{fcheck.run.max} of the exact value for its map, which validates the fault path of the simulator (\cref{tab:d5vpc} also pools transpose runs, which this check does not cover). Over \val{fcheck.maps} maps, the expected loss is \val{fcheck.0.1.0.mean} for $\xi=0$ and \val{fcheck.0.1.4.mean} for $\xi=4$ at $p_v=0.1$, and \val{fcheck.0.2.0.mean} and \val{fcheck.0.2.4.mean} at $p_v=0.2$---the invariance of \cref{thm:corr}---while its standard deviation across maps rises from \val{fcheck.0.1.0.sd} to \val{fcheck.0.1.4.sd} and from \val{fcheck.0.2.0.sd} to \val{fcheck.0.2.4.sd}. Correlation does not make static assignment worse on average; it makes the loss of an individual chip far less predictable. The differences between the simulated means of \cref{tab:d5vpc} for $\xi=0$ and $\xi=4$ are therefore sampling effects of the five maps. The latencies of lossy classes are those of delivered packets only and are therefore biased downwards; they must not be compared with those of lossless classes.
+
+\begin{table}[tbp]
+\centering
+\caption{VPC classes under correlated TSV faults (\D{5}), 16 elevators, PIR 0.006, uniform and transpose traffic, five seeds. Loss: fraction of injected packets dropped because the assigned elevator column is broken. $S_{\mathrm{eff}}^{\mathrm{TSV}}$: effective number of TSV columns used (ERA).}
+\label{tab:d5vpc}
+\small
+\input{gen/tab_d5_vpc.tex}
+\end{table}
+
+% ---------------------------------------------------------------------
+\subsection{RQ4: what structural analysis reveals (\D{7})}
+\label{sec:rq-structure}
+
+ERA analyses the \val{n.traced} traced runs at the level of resources and time windows. Three of its observations change the interpretation of scalar results.
+
+\emph{Hotspot signatures.} Under hotspot traffic all classes have similar average buffer-pressure entropy, but they differ in how congestion moves (\cref{tab:era}). Relative to \cls{XYZ}, the classes that choose among many paths inside the minimal box---adaptively or, like \cls{ROMM}, obliviously---raise the space--time mutual information by a factor of \val{d7.mi.adapt.min} (\cls{\val{d7.mi.adapt.min.class}}) to \val{d7.mi.adapt.max} (\cls{\val{d7.mi.adapt.max.class}}; \cls{FA}: \val{d7.hot.fa.mi.ratio}) and the window-to-window drift of the activity map (\cls{DyAD}: \val{d7.hot.dyad.jsd.ratio}$\times$): congestion around the hot node migrates over time instead of staying on fixed paths. Classes with few fixed paths (\cls{ZXY}, \cls{O1T}) or with network-wide randomisation (\cls{VAL}) stay close to \cls{XYZ}. This migration co-occurs with the latency penalty of adaptive routing under hotspot traffic (\D{4}) and with its amplification of flooding attacks (\D{11}); our data establish the association, not a causal link, and all these runs are saturated at the hot node.
+
+\emph{Elevator usage.} In VPC stacks, ERA's effective number of TSV columns used shows how evenly the elevators are exploited. On uniform traffic all elevator classes use between \val{d7.vpc.fl.cols} and \val{d7.vpc.adele.cols} of the 16 columns effectively; under hotspot traffic First-Last collapses to \val{d7.vpchot.fl.cols} effective columns and \cls{EF} to \val{d7.vpchot.ef.cols}, whereas \cls{AES-G} keeps \val{d7.vpchot.aesg.cols}, which is consistent with the robustness of global elevator selection.
+
+\emph{Limits of the structural metrics.} Two properties of ERA deserve caution in any evaluation that uses it, ours included. First, temporal metrics depend on the window length: re-running the same configurations and seeds with windows of 250 to 2,000 cycles changes the mutual information by a factor of up to \val{d7.win.mi.ratio} and the Jensen--Shannon drift by up to \val{d7.win.jsd.ratio}, while spatial entropies are unaffected. Temporal ERA metrics are comparable only at equal window length, which must be reported. Second, with traces of this length the permutation test of space--time independence rejects in \val{d7.perm.bh.pct}\% of the \val{d7.perm.n} traced runs after Benjamini--Hochberg correction (smallest attainable $p$ = \val{d7.perm.min.p} with 200 permutations): significance is guaranteed and uninformative, and effect sizes ($\kappa_{ST}$, mutual information) are what discriminate classes.
+
+\begin{table}[tbp]
+\centering
+\caption{Structural signatures (ERA). Left: hotspot traffic, ratios to \cls{XYZ} of the space--time mutual information and of the mean Jensen--Shannon drift between windows, and normalised buffer-pressure entropy $\hfull{C}$. Right: effective number of TSV columns used by VPC classes (of 16).}
+\label{tab:era}
+\small
+\begin{tabular}{@{}lrrr@{\hspace{1.4em}}lrr@{}}
+\toprule
+\multicolumn{4}{c}{3D-FC, hotspot traffic} & \multicolumn{3}{c}{VPC, $S_{\mathrm{eff}}^{\mathrm{TSV}}$} \\
+\cmidrule(r){1-4}\cmidrule(l){5-7}
+Class & MI ratio & JSD ratio & $\hfull{C}$ & Class & uniform & hotspot \\
+\midrule
+\cls{XYZ} & \val{d7.hot.xyz.mi.ratio} & \val{d7.hot.xyz.jsd.ratio} & \val{d7.hot.xyz.hc} & \cls{EF} & \val{d7.vpc.ef.cols} & \val{d7.vpchot.ef.cols} \\
+\cls{ZXY} & \val{d7.hot.zxy.mi.ratio} & \val{d7.hot.zxy.jsd.ratio} & \val{d7.hot.zxy.hc} & \cls{AES-G} & \val{d7.vpc.aesg.cols} & \val{d7.vpchot.aesg.cols} \\
+\cls{O1T} & \val{d7.hot.o1t.mi.ratio} & \val{d7.hot.o1t.jsd.ratio} & \val{d7.hot.o1t.hc} & \cls{AdEle} & \val{d7.vpc.adele.cols} & \val{d7.vpchot.adele.cols} \\
+\cls{VAL} & \val{d7.hot.val.mi.ratio} & \val{d7.hot.val.jsd.ratio} & \val{d7.hot.val.hc} & \cls{FL} & \val{d7.vpc.fl.cols} & \val{d7.vpchot.fl.cols} \\
+\cls{NF} & \val{d7.hot.nf.mi.ratio} & \val{d7.hot.nf.jsd.ratio} & \val{d7.hot.nf.hc} & & & \\
+\cls{DyAD} & \val{d7.hot.dyad.mi.ratio} & \val{d7.hot.dyad.jsd.ratio} & \val{d7.hot.dyad.hc} & & & \\
+\cls{HAM} & \val{d7.hot.ham.mi.ratio} & \val{d7.hot.ham.jsd.ratio} & \val{d7.hot.ham.hc} & & & \\
+\cls{ROMM} & \val{d7.hot.romm.mi.ratio} & \val{d7.hot.romm.jsd.ratio} & \val{d7.hot.romm.hc} & & & \\
+\cls{FA} & \val{d7.hot.fa.mi.ratio} & \val{d7.hot.fa.jsd.ratio} & \val{d7.hot.fa.hc} & & & \\
+\cls{RCA} & \val{d7.hot.rca.mi.ratio} & \val{d7.hot.rca.jsd.ratio} & \val{d7.hot.rca.hc} & & & \\
+\cls{QR} & \val{d7.hot.qr.mi.ratio} & \val{d7.hot.qr.jsd.ratio} & \val{d7.hot.qr.hc} & & & \\
+\cls{TA} & \val{d7.hot.ta.mi.ratio} & \val{d7.hot.ta.jsd.ratio} & \val{d7.hot.ta.hc} & & & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ---------------------------------------------------------------------
+\subsection{RQ5: cost and side effects (\D{8}--\D{11})}
+\label{sec:rq-cost}
+
+\paragraph{Hardware (\D{8}).} \Cref{tab:d8} reports the synthesised area per router. Route computation is cheap for every class: the largest route unit, the Hamiltonian one, adds \val{hw.ham.over}\% to the router. Three classes are expensive because of their selection state or information. A tabular Q-router needs \val{hw.qtable.bits} bits of storage per router, \val{hw.qtable.ratio} times the area of the entire baseline router in flip-flops; Q-routing is not implementable as specified without approximation. AdEle's selection unit, with its per-elevator cost registers and skip logic, costs \val{hw.adele.over}\%. Global elevator selection is cheap at the router but requires a network-wide load-collection mechanism that we cannot cost without a concrete design; it fails \D{8} for that reason, as would any scheme that assumes free global information.
+
+\begin{table}[tbp]
+\centering
+\caption{Hardware cost (\D{8}), NanGate 45\,nm. Logic: seven route units plus shared selection logic. Storage: added state bits per router. Header: added bits per packet. Overhead relative to the two-VC baseline router (\val{hw.base}\,$\mu$m$^2$), including storage.}
+\label{tab:d8}
+\small
+\input{gen/tab_d8.tex}
+\end{table}
+
+\paragraph{Energy (\D{9}).} \Cref{tab:d9} gives the energy per delivered flit relative to the reference over the 27 parameter combinations. Minimal routing without side channels costs exactly the reference energy (\cref{sec:analytical}). The overheads come from two sources: non-minimal hops (\cls{VAL}: up to \val{d9.val.max}$\times$) and side-band wiring (\cls{RCA}: up to \val{d9.rca.max}$\times$). Q-routing's update traffic costs \val{d9.qr.max}$\times$ at most. In VPC stacks, global elevator selection \emph{saves} energy (\val{d9.aesg.med}$\times$ median) by choosing elevators that shorten the planar detour.
+
+\begin{table}[tbp]
+\centering
+\caption{Energy per delivered flit relative to the reference (\D{9}): minimum, median and maximum over 27 parameter combinations (uniform traffic, PIR 0.006, five seeds).}
+\label{tab:d9}
+\small
+\input{gen/tab_d9.tex}
+\end{table}
+
+\paragraph{Temperature (\D{10}).} The leverage of routing on temperature is small (\cref{tab:d10}). With a peak rise of \val{d10.xyz.abs}\,K above ambient for \cls{XYZ} in the base variant, all minimal 3D-FC classes stay between \val{d10.ta.best}\,K and \val{d10.romm.worst}\,K of it in every variant and pattern. Thermal-aware selection gains at most \val{d10.ta.bestabs}\,K, in the weak-vertical variant where heat removal through the stack is hardest; since \cls{TA} reads its temperatures from the same compact model that judges \D{10}, without sensor noise or delay beyond its 1,000-cycle update, this gain is an upper bound for a sensor-based implementation; Valiant routing loses up to \val{d10.val.worstabs}\,K, and First-Last up to \val{d10.fl.worstabs}\,K under hotspot traffic because it funnels inter-tier traffic through few elevators. The pass criterion ($+0.05$\,K) is strict, and several failures are practically irrelevant; \cref{sec:verdict} shows which verdicts change under a looser threshold. The hotspot columns describe a saturated regime: at PIR 0.006, \val{d4.fc.hot.und.0.006}\% of the hotspot packets remain undelivered on average.
+
+\begin{table}[tbp]
+\centering
+\caption{Peak temperature rise relative to the reference (K, \D{10}), compact steady-state model, PIR 0.006. Variants: base; NoC-heavy (lower core power, higher energy per flit); weak vertical conduction; strong lateral spreading.}
+\label{tab:d10}
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\input{gen/tab_d10.tex}
+\end{table}
+
+\paragraph{Flooding attacks (\D{11}).} \Cref{tab:d11} measures how much eight flooding sources inflate the latency of benign traffic. Adaptivity is a liability: the inflation factor is \val{d11.fa.0.003} for \cls{FA} and \val{d11.nf.0.003} for \cls{NF} at the lower benign load, against \val{d11.xyz.0.003} for \cls{XYZ} and \val{d11.o1t.0.003} for \cls{O1T}. The paired test confirms both directions (\cref{tab:stats}): \cls{O1T} reduces benign latency under attack by a median of \val{st.o1t.xyz.floodingDoS.medabs}\% with respect to \cls{XYZ}, \cls{FA} increases it by \val{st.fa.xyz.floodingDoS.medabs}\%. A plausible explanation, which we did not test, is that splitting traffic between two fixed dimension orders isolates benign flows from the attack paths, whereas spreading them adaptively over all minimal paths pulls benign traffic into the congestion tree of the victim. Among VPC classes, the reference \cls{EF} is the most resistant. The inflation factor covers delivered benign packets only, and under attack many are not delivered within the run (\cls{XYZ}: \val{d11.und.xyz.0.003} and \val{d11.und.xyz.0.006} of the benign packets at the two loads; \cls{FA}: \val{d11.und.fa.0.003} and \val{d11.und.fa.0.006}; \cls{NF}: \val{d11.und.nf.0.003} and \val{d11.und.nf.0.006}; \cls{O1T}: \val{d11.und.o1t.0.003} and \val{d11.und.o1t.0.006}). Judging the classes by this undelivered fraction instead leaves every \D{11} verdict unchanged except \val{d11.alt.except}, which would pass; for \val{d11.alt.which} the verdict depends on the metric.
+
+\begin{table}[tbp]
+\centering
+\caption{Flooding attack (\D{11}): benign mean latency without attack and inflation factor (latency with eight attackers divided by latency without) at two benign loads, five seeds; no run deadlocked.}
+\label{tab:d11}
+\small
+\input{gen/tab_d11.tex}
+\end{table}
+
+\paragraph{Out-of-order delivery.} Ordering is a side effect that is easy to overlook. When any packet may use any VC, packets of a flow can overtake each other even under dimension-order routing, because consecutive packets may be interleaved on different VCs of the same links; path diversity adds a second cause. Under permutation traffic, where every source sends one persistent flow, every class reorders some packets (\cref{tab:reorder}), and reordering grows sharply with load: beyond saturation it affects \val{ooo.xyz.bitreversal.0.012}\% of the packets of \cls{XYZ} on bit-reversal, against \val{ooo.xyz.transpose1.0.012}\% on transpose below saturation. The VPC classes reorder the most (\cls{AES-G}: \val{ooo.aesg.transpose1.0.012}\%, \cls{EF}: \val{ooo.ef.transpose1.0.012}\% on transpose at PIR 0.012), but every VPC run of \cref{tab:reorder} is past saturation, so per-packet elevator choice and saturation are confounded: \cls{EF}, whose elevator is fixed for each source, reorders almost as much as \cls{AES-G}. In-order delivery, often listed as a virtue of dimension-order routing, therefore holds only with a single VC or with VCs assigned per flow; designs that need ordering must budget reorder buffers or restrict VC assignment, and neither cost is included in \D{8}.
+
+\begin{table}[tbp]
+\centering
+\caption{Out-of-order delivery: percentage of delivered packets ejected before an earlier-created packet of the same source--destination flow, permutation traffic, three seeds.}
+\label{tab:reorder}
+\small
+\input{gen/tab_reorder.tex}
+\end{table}
+
+\paragraph{Paired comparisons.} \Cref{tab:stats} lists the \val{st.n.tests} paired comparisons. Two deserve emphasis. \cls{FA} is faster than \cls{XYZ} on uniform traffic in every matched pair ($\delta$ = \val{st.fa.xyz.uniform.delta}, median \val{st.fa.xyz.uniform.medabs}\%) and slower on hotspot traffic by a median of \val{st.fa.xyz.hotspot.medabs}\%---a reminder that a single-pattern evaluation can support either conclusion. Regional, learned and thermal selections are within one percent of the credit-based selection: Q-routing is marginally faster ($\delta$ = \val{st.qr.fa.nonhotspot.delta}, Holm $p$ = \val{st.qr.fa.nonhotspot.p}), the thermal selection marginally slower ($\delta$ = \val{st.ta.fa.nonhotspot.delta}, median $+\val{st.ta.fa.nonhotspot.medabs}\%$), and RCA indistinguishable (Holm $p$ = \val{st.rca.fa.nonhotspot.p}).
+
+\begin{table}[tbp]
+\centering
+\caption{Paired comparisons of mean latency over matched (pattern, load, seed) triples, deadlocked pairs excluded. Median relative difference of the first class to the second; paired dominance $\delta$ with 95\% bootstrap interval; two-sided Wilcoxon signed-rank test with Holm correction over the family.}
+\label{tab:stats}
+\small
+\input{gen/tab_stats.tex}
+\end{table}

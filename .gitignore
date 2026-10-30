@@ -1,0 +1,26 @@
+# build outputs
+sim3/noc3d_sim
+sim3/experiments/inject_policy/noc3d_sim_injesc
+sim3/experiments/rand_selection/noc3d_sim_randsel
+sim3/experiments/commitment/noc3d_sim_instr
+sim3/experiments/fault_check/replica
+bench3/fault_reach
+cdg_check/
+paper3/build/
+*.o
+# re-runs (the committed results are never overwritten)
+sim3/results/*_rerun.jsonl
+sim3/experiments/inject_policy/o_*.stats
+sim3/experiments/rand_selection/o_*.stats
+# temporary synthesis folders of hw/synth_context.py
+hw/.ctx_*/
+# Python and LaTeX by-products
+__pycache__/
+*.pyc
+paper3/*.aux
+paper3/*.log
+paper3/*.out
+paper3/*.pdf
+# third-party files that are not redistributed
+hw/NangateOpenCellLibrary_typical.lib
+validation/booksim

@@ -1,0 +1,32 @@
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{2.35cm}c>{\raggedright\arraybackslash}p{1.9cm}>{\raggedright\arraybackslash}p{1.35cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{2.0cm}>{\raggedright\arraybackslash}p{1.3cm}c>{\raggedright\arraybackslash}p{1.45cm}c@{}}
+\toprule
+Algorithm & Year & Venue & Topology & Mechanism (axis B) & Objective (axis C) & Info.\\ (axis D) & DL & Simulator & Base. \\
+\midrule
+AdEle~\cite{taheri2021adele} & 2021 & DAC & VPC & offline elevator subsets + skip-RR & congestion, energy & local & R & Access Noxim & adapt. \\
+Asymmetric edge routers~\cite{kunthara2021edge} & 2021 & Nano Commun. Netw. & 3D-FC & bufferless deflection, interleaved edge routers & congestion, energy & local & F & BookSim & adapt. \\
+Reflect3d~\cite{silva2021reflect3d} & 2021 & SBCCI & VPC & 4 ordered VNs on 2 VCs, elevator search & faults, congestion & local & F & RTL (ModelSim) & adapt. \\
+Remote Control~\cite{majumder2021remote} & 2021 & IEEE TC & 2.5D & boundary buffer reservation & deadlock avoidance & local & F & n/v & adapt. \\
+DeFT~\cite{taheri2022deft} & 2022 & DATE & 2.5D & virtual networks + VL selection & VL faults, congestion & local & F & Noxim (ext.) & adapt. \\
+Directional TA~\cite{kaleem2022directional} & 2022 & IJEECS & 3D-FC & directional minimal & thermal & local & n/v & n/v & n/v \\
+FT-PDC~\cite{khodadadi2022ftpdc} & 2022 & J. Supercomput. & 3D-FC & path-diversity selection & faults, congestion & two-hop & n/v & n/v & n/v \\
+LETHOR~\cite{safari2022lethor} & 2022 & J. Supercomput. & 3D-FC & proactive avoidance of hot regions & thermal & layer-wide & n/v & n/v & n/v \\
+STTAR~\cite{fang2022sttar} & 2022 & CMC & 3D-FC & score-based + buffer resizing & thermal, congestion & local & n/v & n/v & n/v \\
+TTQR~\cite{liu2022ttqr} & 2022 & Sensors & 3D-FC & two Q-tables (traffic, thermal) & thermal, congestion & learned & n/v & Access Noxim & adapt. \\
+AdEle+~\cite{taheri2023adeleplus} & 2023 & IEEE TC & VPC & offline subsets + skip-RR & congestion, energy & local & R & Access Noxim & adapt. \\
+Gaffour et al.~\cite{gaffour2023congestion} & 2023 & IJCA & 2D/3D & congestion-aware selection & congestion & local & n/v & n/v & n/v \\
+Li et al.~\cite{jiao2023aftc} & 2023 & Microelectron. J. & 3D-FC & diagonal regions & faults, congestion & local & n/v & n/v & n/v \\
+Prime turn model~\cite{sharma2023prime} & 2023 & CCIS & 3D-FC & prime-number turn rules, no VC & congestion & local & C & n/v & n/v \\
+RLARA~\cite{jiao2023rlara} & 2023 & Electronics & 3D-FC & TSV-aware Q-table (k-means) & TSV faults & learned & I & Garnet 2.0 & n/v \\
+ILP turn design~\cite{liu2024ilp} & 2024 & SOCC & 2.5D & ILP-optimal turn restrictions & deadlock, load, faults & offline & F & n/v & n/v \\
+ReD~\cite{taheri2024red} & 2024 & IEEE TCAD & 2.5D & two VNs with distinct turn models & HL and VL faults & local & F & n/v & n/v \\
+SCRIPT~\cite{taheri2024script} & 2024 & GLSVLSI & 2.5D & multi-objective path concealment & security (DDoS) & global (offline) & n/v & n/v & n/v \\
+AMBTAR~\cite{dadmand2025ambtar} & 2025 & J. Supercomput. & 3D-FC & probabilistic beltways (non-minimal) & thermal & n/v & n/v & n/v & n/v \\
+CTWR~\cite{ctwr2025} & 2025 & Comput. Electr. Eng. & VPC & multi-criteria inter-layer & congestion, thermal, wear & local + global & n/v & Access Noxim & n/v \\
+FCARA~\cite{zhou2025fcara} & 2025 & J. Electron. Inf. Technol. & 2.5D & joint fault--congestion cost & faults, congestion & local & C & Chiplet\-Simulator & adapt. \\
+Passage-based~\cite{kurokawa2025passage} & 2025 & Chips & 3D-FC & passage-based detours & faults & local & n/v & n/v & n/v \\
+Securet3d~\cite{dasilva2025securet3d} & 2025 & IEEE TVLSI & VPC & secure path establishment & security, faults & n/v & n/v & n/v & n/v \\
+ATLAS~\cite{singh2026atlas} & 2026 & JETTA & 3D + wireless & hierarchical planning + local adaptation & faults, congestion, thermal & global + local & n/v & Access Noxim & det. \\
+BLAR-3D~\cite{aslan2026blar} & 2026 & DDECS & 3D-FC & Q-learning + beta selection & congestion & learned & n/v & n/v & n/v \\
+STAR~\cite{ning2026star} & 2026 & J. Supercomput. & VPC & Stackelberg game & thermal, delay & global & n/v & Noxim & n/v \\
+\bottomrule
+\end{tabularx}

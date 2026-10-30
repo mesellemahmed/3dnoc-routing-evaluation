@@ -1,0 +1,92 @@
+{
+ "rc_xyz": {
+  "committed": 38.57,
+  "alone": 38.57,
+  "reversed": 38.57
+ },
+ "rc_zxy": {
+  "committed": 35.91,
+  "alone": 35.91,
+  "reversed": 35.91
+ },
+ "rc_nf": {
+  "committed": 172.368,
+  "alone": 171.304,
+  "reversed": 172.368
+ },
+ "rc_dyad": {
+  "committed": 195.51,
+  "alone": 210.406,
+  "reversed": 195.51
+ },
+ "rc_ham": {
+  "committed": 317.87,
+  "alone": 326.914,
+  "reversed": 317.87
+ },
+ "rc_o1t": {
+  "committed": 46.018,
+  "alone": 46.018,
+  "reversed": 46.018
+ },
+ "rc_twophase": {
+  "committed": 81.662,
+  "alone": 81.662,
+  "reversed": 81.662
+ },
+ "rc_fa": {
+  "committed": 208.81,
+  "alone": 215.46,
+  "reversed": 208.81
+ },
+ "rca_select": {
+  "committed": 245.252,
+  "alone": 232.484,
+  "reversed": 245.252
+ },
+ "rca_agg": {
+  "committed": 199.5,
+  "alone": 202.692,
+  "reversed": 199.5
+ },
+ "qr_select": {
+  "committed": 433.846,
+  "alone": 411.768,
+  "reversed": 433.846
+ },
+ "qr_update": {
+  "committed": 175.826,
+  "alone": 175.826,
+  "reversed": 175.826
+ },
+ "rc_ta": {
+  "committed": 238.07,
+  "alone": 260.68,
+  "reversed": 238.07
+ },
+ "rc_ef": {
+  "committed": 57.722,
+  "alone": 57.722,
+  "reversed": 57.722
+ },
+ "rc_fl": {
+  "committed": 165.984,
+  "alone": 148.96,
+  "reversed": 165.984
+ },
+ "adele_sel": {
+  "committed": 4696.496,
+  "alone": 4756.346,
+  "reversed": 4696.496
+ },
+ "vc_fifo": {
+  "committed": 4190.032,
+  "alone": 4190.032,
+  "reversed": 4190.032
+ },
+ "xbar7": {
+  "committed": 2621.696,
+  "alone": 2621.696,
+  "reversed": 2621.696
+ }
+}

@@ -1,0 +1,54 @@
+% =====================================================================
+\section{Introduction}
+\label{sec:intro}
+
+Three-dimensional (3D) integration stacks active dies and connects them with through-silicon vias (TSVs). At constant footprint it shortens wires and reduces the diameter of the on-chip interconnect, which keeps 3D networks-on-chip (3D NoCs) on the roadmap of manycore processors, near-memory accelerators and chiplet-based systems~\cite{pavlidis2007topologies,kaur2024mapping}. The vertical dimension, however, is not a free extra axis. A TSV is at once the scarcest resource of the stack---it costs area and yield and concentrates heat---and its least reliable one: TSV defects are frequent and spatially clustered, because the thermal and mechanical stresses that cause them are themselves clustered~\cite{dang2021hotcluster,wang2015clustering}. Designers therefore build \emph{vertically partially connected} (VPC) stacks, in which only a few columns---the \emph{elevators}---cross the tiers~\cite{dubois2013elevator,charif2018firstlast}, or move to 2.5D integration, in which chiplets communicate through an interposer network~\cite{yin2018modular,taheri2022deft}.
+
+Routing is where these constraints meet. A 3D routing algorithm must be deadlock-free on topologies that may be irregular or degraded, deliver packets despite vertical faults, balance load across tiers whose thermal behaviour differs, and increasingly resist adversarial traffic. The last five years have produced a remarkable variety of answers: elevator-selection policies~\cite{taheri2021adele,taheri2023adeleplus,ctwr2025}, region- and passage-based fault tolerance~\cite{jiao2023aftc,kurokawa2025passage}, new turn models~\cite{sharma2023prime}, path-diversity selection~\cite{khodadadi2022ftpdc}, reinforcement-learning selectors~\cite{liu2022ttqr,jiao2023rlara,aslan2026blar}, thermal beltways and Stackelberg games~\cite{dadmand2025ambtar,ning2026star}, secure routing~\cite{dasilva2025securet3d,taheri2024script}, hybrid wired--wireless schemes~\cite{singh2026atlas}, and chiplet-level deadlock avoidance and fault tolerance~\cite{taheri2022deft,taheri2024red,liu2024ilp,zhou2025fcara}.
+
+\paragraph{An evaluation crisis.} This variety has not produced cumulative knowledge. Our audit of a verified corpus of \val{corpus.n} proposals from 2021--2026 (\cref{sec:practice}) finds that, of the \val{corpus.dl.verif} whose deadlock argument we could inspect, only \val{corpus.formal} give a formal argument that a reader can check; that the \val{corpus.sim.verif} evaluations whose simulator we could identify use \val{corpus.simfamilies} different simulators with incompatible router models; and that we found no proposal evaluated under spatially correlated TSV faults, although TSV defects cluster~\cite{dang2021hotcluster,wang2015clustering}. The dominant evidence, scalar latency and throughput averages, also hides how traffic is distributed over routers, elevators and time~\cite{mesellem2026era}. The problem is not confined to 3D: a 2026 scoping review of learning-based NoC routing reaches the same diagnosis for 48 studies, noting missing deadlock guarantees and that only 37.5\% of them report synthesis data~\cite{ibarra2026learning}. A survey that claims to judge the field must apply one standard to every proposal.
+
+\paragraph{Research questions.} We organise the evaluation around five questions.
+\begin{enumerate}[label=\RQ{\arabic*},leftmargin=*,itemsep=1pt]
+  \item \emph{Correctness.} Which routing classes behind the surveyed algorithms are provably deadlock-free, and does the published evidence support the claims made?
+  \item \emph{Performance and robustness.} How do the classes compare in latency, saturation throughput, tail latency and fairness across adversarial, bursty and saturating traffic, router micro-architectures and network sizes?
+  \item \emph{Faults.} How tolerant are they to planar and to spatially correlated vertical faults, and what does correlation change?
+  \item \emph{Structure.} What does trace-level structural analysis reveal that scalar metrics hide?
+  \item \emph{Cost and side effects.} What do adaptiveness and learning cost in logic, storage, wiring, energy and temperature, and how do they change exposure to denial-of-service attacks?
+\end{enumerate}
+
+\paragraph{Contributions.}
+\begin{enumerate}[label=\textbf{C\arabic*.},leftmargin=*]
+  \item \textbf{A critical survey with an audit of evaluation practice.} A four-axis taxonomy, a verified corpus of \val{corpus.n} routing algorithms for 3D and 2.5D NoCs published in 2021--2026 placed against \val{corpus.hist} historical reference designs, a family-by-family critical review, and a quantitative audit of how the field evaluates its claims (\cref{sec:taxonomy,sec:review,sec:practice}).
+  \item \textbf{A verified evaluation methodology.} A twelve-dimension protocol with explicit pass criteria applied identically to every class; an open cycle-level simulator cross-validated against BookSim~2~\cite{jiang2013booksim}; a channel-dependency checker that \emph{proves} deadlock freedom of an evaluated routing relation or returns a dependency cycle as a witness, applying the theorems of Dally--Seitz and Duato mechanically to the code that is simulated; drain-based detection of partial deadlocks; logic synthesis of every route-computation unit; and a paired design with common random numbers (\cref{sec:protocol}).
+  \item \textbf{Analytical results.} Exact reachability of \val{fr.npol} routing policies under planar and spatially correlated vertical faults, compared with the connectivity bound that no routing can exceed, and a theorem showing that correlation leaves the expected reachability of static routes unchanged while increasing the dispersion of losses and, by Slepian's inequality, the probability that a tier boundary is severed---from \val{part.full.0.2.0} to \val{part.full.0.2.4} for a fully connected $8\times8$ boundary at $p_v=0.2$ (\cref{sec:analytical,sec:rq-fault}).
+  \item \textbf{The evaluation and its lessons.} \val{cls.n} routing classes---covering deterministic, turn-model, Hamiltonian, oblivious, escape-channel adaptive, regional-congestion, learning-based, thermal-aware and five elevator-routing schemes---evaluated in \val{n.sim} simulations (plus \val{n.val} BookSim validation runs) and \val{n.faultmaps} analytical fault maps; a verdict without aggregate score, with its sensitivity to the thresholds; a decision guide, design lessons, a reporting standard and a research agenda (\cref{sec:practice,sec:results,sec:verdict,sec:discussion,sec:agenda}).
+\end{enumerate}
+The simulator, checker, analytical models, hardware descriptions, campaign drivers, raw results and the script that generates every number, table and figure of this article are released as one artefact.
+
+\paragraph{Positioning.} \Cref{tab:surveys} contrasts this article with recent surveys of adjacent scope. Existing surveys classify and summarise; none re-evaluates the surveyed mechanisms on a common platform, checks their deadlock freedom, or confronts them with correlated faults. Conversely, evaluation papers in the field compare one proposal with a few baselines. To our knowledge this is the first survey of 3D NoC routing whose conclusions rest on a verified, common evaluation; one recent survey of 3D NoC routing and router microarchitecture could not be accessed and is not included in the comparison (\cref{sec:survey-method}).
+
+\begin{table}[tbp]
+\centering
+\caption{Comparison with recent surveys of adjacent scope. \cmark: covered; \pmark: partially; \xmark: not covered.}
+\label{tab:surveys}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{2.9cm}c>{\raggedright\arraybackslash}X*{5}{>{\centering\arraybackslash}p{1.32cm}}@{}}
+\toprule
+Survey & Year & Scope & 3D/2.5D routing & Deadlock analysis & Common evaluation & Correlated faults & Artefact \\
+\midrule
+Touati \& Boutekkouk~\cite{touati2020survey} & 2020 & reliable routing in 3D NoCs & \cmark & \pmark & \xmark & \xmark & \xmark \\
+Charles \& Mishra~\cite{charles2021security} & 2021 & NoC security attacks and countermeasures & \xmark & \xmark & \xmark & \xmark & \xmark \\
+Masdari et al.~\cite{masdari2023metaheuristic} & 2023 & metaheuristic NoC optimisation & \pmark & \xmark & \xmark & \xmark & \xmark \\
+Kaur et al.~\cite{kaur2024mapping} & 2024 & mapping and scheduling on 3D NoCs & \xmark & \xmark & \xmark & \xmark & \xmark \\
+Muhsen et al.~\cite{muhsen2024review} & 2024 & routing in NoC-based MPSoCs for IoT & \pmark & \xmark & \xmark & \xmark & \xmark \\
+Kondoth et al.~\cite{kondoth2026survey} & 2026 & adaptive routing in 2D NoCs & \xmark & \pmark & \xmark & \xmark & \xmark \\
+Ibarra Infante et al.~\cite{ibarra2026learning} & 2026 & machine-learning-based NoC routing & \pmark & \pmark & \xmark & \xmark & \xmark \\
+\midrule
+\textbf{This article} & 2026 & routing in 3D, VPC and 2.5D NoCs & \cmark & \cmark\ (mech.) & \cmark\ (\val{cls.n} classes) & \cmark & \cmark \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\paragraph{Organisation.} \Cref{sec:background} sets the formal foundations. \Cref{sec:survey-method} describes the literature methodology, \cref{sec:taxonomy} the taxonomy and corpus, \cref{sec:review} the critical review and \cref{sec:practice} the audit of evaluation practice. \Cref{sec:protocol} defines the protocol, platform and analytical models; \cref{sec:results} reports the results by dimension, \cref{sec:verdict} the verdict. \Cref{sec:discussion} discusses lessons and threats to validity, \cref{sec:agenda} the research agenda, and \cref{sec:conclusion} concludes.

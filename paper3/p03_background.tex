@@ -1,0 +1,147 @@
+% =====================================================================
+\section{Background and formal foundations}
+\label{sec:background}
+
+This section fixes the vocabulary and the results on which every later judgement rests. We state the deadlock theorems together with the router assumptions under which they hold, because \cref{sec:rq-correct} shows that correctness hinges on these assumptions.
+
+\subsection{Three-dimensional on-chip interconnects}
+\label{sec:bg-arch}
+
+\Cref{fig:arch} shows the three integration styles covered by this survey. In a \emph{fully connected} 3D mesh (3D-FC) every router of tier $z$ has a vertical link to the router above and below it, so a $k_x\times k_y\times k_z$ mesh has $2k_xk_y(k_z-1)$ unidirectional vertical channels and diameter $(k_x-1)+(k_y-1)+(k_z-1)$~\cite{pavlidis2007topologies}. Each vertical link is a TSV bundle whose area, keep-out zone, capacitance and yield loss are far from negligible, and whose defects cluster because the thermo-mechanical stresses that cause them are themselves spatially correlated~\cite{dang2021hotcluster,wang2015clustering,jiang2013tsvrepair}. A \emph{vertically partially connected} (VPC) stack therefore keeps vertical links only in a subset of columns, the \emph{elevators}; a packet whose destination lies on another tier must first reach an elevator, travel vertically, then complete its planar route~\cite{dubois2013elevator,charif2018firstlast}. VPC routing is thus a two-level decision---which elevator, then which planar path---and the elevator choice dominates both performance and fault tolerance (\cref{sec:rq-perf,sec:rq-fault}). Finally, \emph{2.5D} systems place chiplets on an interposer whose network connects chiplet boundary routers through vertical links (VLs); each chiplet may run its own routing algorithm, and deadlock freedom of the composition is not implied by the deadlock freedom of the parts~\cite{yin2018modular,majumder2021remote,taheri2022deft}.
+
+\begin{figure}[tbp]
+\centering
+\begin{tikzpicture}[x={(0.62cm,0cm)},y={(0.26cm,0.20cm)},z={(0cm,0.92cm)},
+  node/.style={circle,fill=acc2,inner sep=0.9pt},
+  enode/.style={rectangle,fill=acc,inner sep=1.5pt},
+  lnk/.style={draw=black!45,line width=0.35pt},
+  vl/.style={draw=acc,line width=0.9pt}]
+% ---------- (a) 3D-FC, 4x4x3
+\begin{scope}
+  \foreach \z/\c in {0/lay1,1/lay2,2/lay3} {
+    \fill[\c,opacity=0.85] (-0.3,-0.3,\z*1.4) -- (3.3,-0.3,\z*1.4) -- (3.3,3.3,\z*1.4) -- (-0.3,3.3,\z*1.4) -- cycle;
+    \foreach \x in {0,...,3} \foreach \y in {0,...,3} {
+      \ifnum\x<3 \draw[lnk] (\x,\y,\z*1.4) -- (\x+1,\y,\z*1.4); \fi
+      \ifnum\y<3 \draw[lnk] (\x,\y,\z*1.4) -- (\x,\y+1,\z*1.4); \fi
+    }
+  }
+  \foreach \x in {0,...,3} \foreach \y in {0,...,3} {
+    \draw[vl,draw=acc!55,line width=0.5pt] (\x,\y,0) -- (\x,\y,2.8);
+    \foreach \z in {0,1,2} \node[node] at (\x,\y,\z*1.4) {};
+  }
+  \node[font=\footnotesize] at (1.5,-1.6,0) {(a) 3D-FC mesh};
+\end{scope}
+% ---------- (b) VPC with stride-2 elevators
+\begin{scope}[xshift=4.3cm]
+  \foreach \z/\c in {0/lay1,1/lay2,2/lay3} {
+    \fill[\c,opacity=0.85] (-0.3,-0.3,\z*1.4) -- (3.3,-0.3,\z*1.4) -- (3.3,3.3,\z*1.4) -- (-0.3,3.3,\z*1.4) -- cycle;
+    \foreach \x in {0,...,3} \foreach \y in {0,...,3} {
+      \ifnum\x<3 \draw[lnk] (\x,\y,\z*1.4) -- (\x+1,\y,\z*1.4); \fi
+      \ifnum\y<3 \draw[lnk] (\x,\y,\z*1.4) -- (\x,\y+1,\z*1.4); \fi
+    }
+  }
+  \foreach \x/\y in {1/1,3/1,1/3,3/3} \draw[vl] (\x,\y,0) -- (\x,\y,2.8);
+  \foreach \x in {0,...,3} \foreach \y in {0,...,3} \foreach \z in {0,1,2} \node[node] at (\x,\y,\z*1.4) {};
+  \foreach \x/\y in {1/1,3/1,1/3,3/3} \foreach \z in {0,1,2} \node[enode] at (\x,\y,\z*1.4) {};
+  % a route: source (0,0,0) -> elevator (1,1) -> up -> destination (3,2,2)
+  \draw[c3,line width=1.2pt,-{Stealth[length=4pt]}] (0,0,0) -- (1,0,0) -- (1,1,0) -- (1,1,2.8) -- (2,1,2.8) -- (3,1,2.8) -- (3,2,2.8);
+  \node[font=\footnotesize] at (1.5,-1.6,0) {(b) VPC, elevators (\textcolor{acc}{$\blacksquare$})};
+\end{scope}
+% ---------- (c) 2.5D
+\begin{scope}[xshift=8.4cm]
+  \fill[black!8] (-0.4,-0.5,0) -- (5.4,-0.5,0) -- (5.4,2.5,0) -- (-0.4,2.5,0) -- cycle;
+  \foreach \x in {0,...,5} \foreach \y in {0,...,2} {
+     \ifnum\x<5 \draw[lnk] (\x,\y,0) -- (\x+1,\y,0); \fi
+     \ifnum\y<2 \draw[lnk] (\x,\y,0) -- (\x,\y+1,0); \fi
+     \node[node,fill=black!55,inner sep=0.7pt] at (\x,\y,0) {};
+  }
+  \foreach \ox/\c in {0/lay1,2/lay2,4/lay3} {
+    \draw[vl] (\ox+0.5,1,0) -- (\ox+0.5,1,1.6);
+    \fill[\c,opacity=0.92] (\ox-0.3,0.2,1.6) -- (\ox+1.3,0.2,1.6) -- (\ox+1.3,1.8,1.6) -- (\ox-0.3,1.8,1.6) -- cycle;
+    \foreach \i in {0,1} \foreach \j in {0,1} {
+      \ifnum\i<1 \draw[lnk] (\ox+\i,0.5+\j,1.6) -- (\ox+\i+1,0.5+\j,1.6); \fi
+      \ifnum\j<1 \draw[lnk] (\ox+\i,0.5+\j,1.6) -- (\ox+\i,1.5+\j,1.6); \fi
+      \node[node] at (\ox+\i,0.5+\j,1.6) {};
+    }
+  }
+  \node[font=\footnotesize] at (2.5,-1.6,0) {(c) 2.5D chiplets on an interposer};
+\end{scope}
+\end{tikzpicture}
+\caption{Integration styles covered by the survey. (a) Fully connected 3D mesh: every router has vertical links. (b) Vertically partially connected stack with stride-2 elevators; the highlighted route reaches an elevator, climbs, and completes its planar path on the destination tier. (c) 2.5D system: chiplet networks connected through vertical links (VLs) to an interposer network.}
+\label{fig:arch}
+\end{figure}
+
+\subsection{Router model and flow control}
+\label{sec:bg-router}
+
+We consider input-queued wormhole routers with $V$ virtual channels (VCs) per input port and credit-based flow control~\cite{dally2004principles}. A packet of $L$ flits is routed by its head flit: route computation returns a set of admissible (port, VC) pairs; the VC allocator grants one free output VC; the switch allocator then schedules flits through the crossbar, one per output per cycle. Two micro-architectural details matter for correctness and are rarely reported in the 3D routing literature.
+
+\emph{VC reallocation.} An output VC is released when the tail flit of its owner leaves the router. Under \emph{atomic} reallocation it is granted to a new packet only once the downstream buffer is empty, so that a VC buffer never holds flits of two packets. Under \emph{non-atomic} reallocation it is granted as soon as the tail has left, and the head of the next packet queues behind the tail of the previous one in the downstream buffer. Non-atomic reuse improves buffer utilisation and is the default behaviour of a wormhole router with a single FIFO per input port; BookSim exposes the choice as \texttt{wait\_for\_tail\_credit}~\cite{jiang2013booksim}.
+
+\emph{Arbitration.} Separable round-robin allocators are locally fair: each input competes on equal terms at each router. Locally fair arbitration is globally unfair in multi-hop networks: a flow that joins a congested path close to the bottleneck competes once and obtains half of the bandwidth at that merge, whereas a flow that has already crossed $k$ such merges obtains a share that decays geometrically with $k$ (the parking-lot effect)~\cite{dally2004principles}. Fairness therefore depends on the arbitration policy as well as on the routing algorithm; our evaluation varies only the latter (\cref{sec:rq-perf}).
+
+\subsection{Routing relations, selection and adaptiveness}
+\label{sec:bg-routing}
+
+Let $\mathcal{N}$ be the set of routers and $\Ch$ the set of channels, a channel being a (link, VC) pair; injection and ejection channels are included.
+
+\begin{definition}[Routing relation and selection]\label{def:routing}
+A \emph{routing relation} is a map $\R:\Ch\times\mathcal{N}\to 2^{\Ch}$ that gives, for a head flit in input channel $c$ destined to $d$, the set of admissible output channels. A \emph{selection function} chooses one element of $\R(c,d)$ using network state. $\R$ is \emph{deterministic} if $|\R(c,d)|=1$ for all $(c,d)$, \emph{oblivious} if the choice among several admissible channels does not depend on network state, and \emph{adaptive} otherwise; it is \emph{minimal} if every admissible channel reduces the distance to $d$.
+\end{definition}
+
+This separation matters for evaluation: deadlock freedom is a property of $\R$ and of the router, whereas performance depends on the selection function. Most algorithms of the last five years are new selection functions on top of a small number of routing relations (\cref{sec:review}).
+
+\begin{definition}[Degree of adaptiveness]\label{def:alpha}
+For a minimal routing relation and a source--destination pair $(s,d)$ with absolute offsets $(\Delta_x,\Delta_y,\Delta_z)$ (numbers of hops per dimension), let $\Pmin(s,d)$ be the set of minimal paths, $|\Pmin(s,d)|=\binom{\Delta_x+\Delta_y+\Delta_z}{\Delta_x,\,\Delta_y,\,\Delta_z}$, and $\mathcal{P}_\R(s,d)\subseteq\Pmin(s,d)$ the paths that $\R$ admits. The degree of adaptiveness is $\alpha(s,d)=|\mathcal{P}_\R(s,d)|/|\Pmin(s,d)|$; we report its mean over ordered pairs together with the fraction of pairs for which $|\mathcal{P}_\R(s,d)|>1$.
+\end{definition}
+
+\subsection{Deadlock: theorems and their assumptions}
+\label{sec:bg-deadlock}
+
+\begin{definition}[Channel dependency graph]\label{def:cdg}
+The channel dependency graph (CDG) of $\R$ is the directed graph $D=(\Ch,E)$ with $(c_i,c_j)\in E$ if and only if there is a destination $d$ such that a packet destined to $d$ can occupy $c_i$ and $c_j\in\R(c_i,d)$.
+\end{definition}
+
+\begin{theorem}[Dally and Seitz~\cite{dally1987deadlock}]\label{thm:dally}
+A routing relation whose CDG is acyclic is deadlock-free. For a deterministic relation the condition is also necessary when every cycle of the CDG can be filled by packets, as for the dimension-order and turn-model relations considered here.
+\end{theorem}
+
+In general a cyclic CDG does not prove that a deadlock is reachable; the checker of \cref{sec:checker} therefore reports a cycle as a witness, to be confirmed by simulation or by a reachability argument.
+
+Acyclicity can be obtained by forbidding turns (the turn model and its 3D variants such as negative-first, 4NP-first and odd--even~\cite{glass1992turn,chiu2000oddeven,pasricha2011lowoverhead}), by labelling nodes along a Hamiltonian path and allowing only label-monotone moves~\cite{lin1994hamiltonian,ebrahimi2013hamfa}, or by separating traffic into ordered virtual networks, which is how Elevator-First avoids cycles across tiers~\cite{dubois2013elevator}. Fully adaptive routing, whose CDG is cyclic, needs the weaker condition of Duato.
+
+\begin{definition}[Escape subnetwork]\label{def:escape}
+A routing subrelation $\R_1\subseteq\R$ on channels $\Ch_1\subseteq\Ch$ is an \emph{escape subnetwork} if it is connected (every destination is reachable from every channel through $\Ch_1$) and, from every state of $\R$, a blocked head flit may always request a channel of $\R_1$.
+\end{definition}
+
+\begin{theorem}[Duato~\cite{duato1993theory,duato1995necessary}]\label{thm:duato}
+Under wormhole switching, a connected adaptive routing relation $\R$ is deadlock-free if it has an escape subnetwork $\R_1$ whose extended channel dependency graph is acyclic. The extended graph adds to the CDG of $\R_1$ the indirect dependencies created by packets that leave $\Ch_1$ and later re-enter it, and the cross dependencies created when channels of $\Ch_1$ are also used by packets that are not routed by $\R_1$.
+\end{theorem}
+
+In the common \emph{no-return} implementation the escape channels are VC~0 routed by dimension order and a packet that enters VC~0 stays there; the extended graph then reduces to the CDG of dimension-order routing, which is acyclic. Verbeek and Schmaltz gave necessary and sufficient conditions that tolerate richer routing relations~\cite{verbeek2011necessary}.
+
+\paragraph{The hidden assumption.} \Cref{thm:duato} is proved for a switching model in which a queue does not accept the head of a new packet before it has emptied the previous one~\cite{duato1993theory}. This is atomic reallocation (\cref{sec:bg-router}). Ma et~al.\ observed that, with non-atomic allocation, ``a deadlock configuration is easily formed'' in fully adaptive routing and designed whole-packet forwarding to recover buffer utilisation without losing the guarantee~\cite{ma2012wpf}. The mechanism is simple and we state it because it explains a result of \cref{sec:rq-correct}.
+
+\begin{proposition}[Commitment under non-atomic reallocation]\label{prop:nonatomic}
+Consider a router that never revokes a VC grant, as in our simulator and in BookSim. With non-atomic reallocation, a head flit may be granted an adaptive output VC whose downstream buffer still holds flits of a previous packet. From that moment it waits for that VC alone and can no longer request the escape subnetwork. If the previous packet is itself committed to a non-empty adaptive VC, a cycle of such commitments is a deadlock that \cref{thm:duato} does not exclude.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+The escape argument of \cref{thm:duato} requires that a blocked head can always fall back on an escape channel. A head that has already been allocated a VC has no allocation left to make; it only waits for credits of that VC. The waits-for relation among committed heads therefore follows dependencies between adaptive channels, which form cycles (\cref{tab:cdg}). A cycle in which every queue is full and every head is committed to the next queue is a legal, persistent state; \cref{fig:witness} shows one that our simulator reached.
+\end{proof}
+
+Livelock and starvation are distinct failures: minimal routing cannot livelock, non-minimal routing needs a bound on misrouting, and starvation is excluded only by starvation-free arbitration.
+
+\subsection{Fault model}
+\label{sec:bg-fault}
+
+Planar links fail independently with probability $p_h$. Vertical faults follow a Gaussian copula: for each tier boundary $b$, a zero-mean Gaussian field $Z_b(x,y)$ over the $k_xk_y$ columns has covariance
+\begin{equation}\label{eq:copula}
+\operatorname{Cov}\bigl(Z_b(x,y),Z_b(x',y')\bigr)=\exp\!\bigl(-\lVert(x,y)-(x',y')\rVert_2/\xi\bigr),
+\end{equation}
+and the vertical segment of column $(x,y)$ across boundary $b$ fails if and only if $Z_b(x,y)<\Phi^{-1}(p_v)$. Every segment fails with probability exactly $p_v$, whatever the correlation length $\xi$; $\xi=0$, understood as the limit $\xi\to0$ in which distinct columns are uncorrelated, gives independent faults, and larger $\xi$ produces clusters of failed columns, consistent with the clustering reported for TSV defects~\cite{dang2021hotcluster,wang2015clustering}. Boundaries are mutually independent. Keeping the marginal fixed isolates the effect of correlation from that of the fault rate.
+
+\subsection{Structural observability (ERA)}
+\label{sec:bg-era}
+
+Scalar averages compress a simulation into a few numbers. The Entropic Structural Observability framework~\cite{mesellem2026era}, abbreviated ERA here, analyses instead the trace of typed packet events (injection, forwarding, reception, drop) as probability distributions over resources: routers, directed links, time windows, buffers and, in 3D, TSV columns. For a distribution with Shannon entropy $H$ over $m_{\mathrm{act}}$ active among $m_{\mathrm{full}}$ resources it reports the normalised entropies $\hact{}=H/\log_2 m_{\mathrm{act}}$ and $\hfull{}=H/\log_2 m_{\mathrm{full}}$, the effective support $S_{\mathrm{eff}}=2^H$ and the concentration $1-\hact{}$. The router~$\times$~window activity matrix yields the space--time mutual information $I(R;W)$, its normalised effect size $\kappa_{ST}=I(R;W)/\min\{H(R),H(W)\}$ and a permutation $p$-value ($B=200$ permutations); the Jensen--Shannon divergence between consecutive windows measures drift; Jain's index and related indicators measure imbalance. ERA does not alter the simulation; it is a diagnostic layer on its trace. We use it as dimension \D{7} and to expose deadlock and hotspot signatures that scalar metrics miss (\cref{sec:rq-structure}).

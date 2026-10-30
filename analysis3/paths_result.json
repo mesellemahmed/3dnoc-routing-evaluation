@@ -1,0 +1,62 @@
+{
+ "xyz": {
+  "multi_frac": 0.0,
+  "paths_median": 1.0,
+  "alpha_mean": 0.14372547432584545
+ },
+ "zxy": {
+  "multi_frac": 0.0,
+  "paths_median": 1.0,
+  "alpha_mean": 0.14372547432584545
+ },
+ "nf": {
+  "multi_frac": 0.7549019607843137,
+  "paths_median": 5.0,
+  "alpha_mean": 0.45797612594717374
+ },
+ "dyad": {
+  "multi_frac": 0.7549019607843137,
+  "paths_median": 5.0,
+  "alpha_mean": 0.45797612594717374
+ },
+ "fa": {
+  "multi_frac": 0.9333333333333333,
+  "paths_median": 30.0,
+  "alpha_mean": 1.0
+ },
+ "rca": {
+  "multi_frac": 0.9333333333333333,
+  "paths_median": 30.0,
+  "alpha_mean": 1.0
+ },
+ "qr": {
+  "multi_frac": 0.9333333333333333,
+  "paths_median": 30.0,
+  "alpha_mean": 1.0
+ },
+ "ta": {
+  "multi_frac": 0.9333333333333333,
+  "paths_median": 30.0,
+  "alpha_mean": 1.0
+ },
+ "ham": {
+  "multi_frac": 0.9573835784313726,
+  "paths_median": 3799652.0,
+  "alpha_mean": 0.21467809279160383
+ },
+ "o1t": {
+  "multi_frac": 0.9333333333333333,
+  "paths_median": 2.0,
+  "alpha_mean": 0.22078428198502423
+ },
+ "romm": {
+  "multi_frac": 0.9333333333333333,
+  "paths_median": 13.5,
+  "alpha_mean": 0.4803902581541009
+ },
+ "val": {
+  "multi_frac": 1.0,
+  "paths_median": 250.0,
+  "alpha_mean": NaN
+ }
+}

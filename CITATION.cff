@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this software or data, please cite the article."
+title: "Routing in Three-Dimensional Networks-on-Chip: code, data and scripts"
+type: software
+authors:
+  - family-names: Mesellem
+    given-names: Ahmed
+    affiliation: "STIC Laboratory, Abou Bekr Belkaid University, Tlemcen, Algeria"
+license: MIT
+version: "3.0"
+date-released: "2026-10-25"
+keywords:
+  - 3D network-on-chip
+  - adaptive routing
+  - deadlock freedom
+  - fault tolerance
+  - through-silicon via
+  - performance evaluation
+preferred-citation:
+  type: article
+  title: "Beyond Performance: A Critical Survey and Verified Twelve-Dimensional Evaluation of 3D Network-on-Chip Routing"
+  authors:
+    - family-names: Mesellem, Mana
+      given-names: Ahmed, Mohammed
+      affiliation: "STIC Laboratory, Abou Bekr Belkaid University, Tlemcen, Algeria"
+  year: 2026
+  notes: "Manuscript under review."

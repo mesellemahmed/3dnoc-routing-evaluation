@@ -1,0 +1,8 @@
+k=8 tr=uniform wtc=0 batch=600 seed=1 rc=255 t=62s warn=0 dur=18278
+k=8 tr=uniform wtc=0 batch=600 seed=2 rc=255 t=62s warn=0 dur=19266
+k=8 tr=uniform wtc=0 batch=600 seed=3 rc=255 t=61s warn=0 dur=19417
+k=8 tr=uniform wtc=0 batch=600 seed=4 rc=255 t=65s warn=0 dur=18323
+k=4 tr=uniform wtc=0 batch=2000 seed=1 rc=255 t=11s warn=0 dur=28379
+k=4 tr=uniform wtc=0 batch=2000 seed=2 rc=255 t=10s warn=0 dur=28720
+k=4 tr=uniform wtc=0 batch=2000 seed=3 rc=255 t=10s warn=0 dur=28950
+k=4 tr=uniform wtc=0 batch=2000 seed=4 rc=255 t=9s warn=0 dur=28791

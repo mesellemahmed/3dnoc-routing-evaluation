@@ -1,0 +1,104 @@
+% =====================================================================
+%  Routing in 3D Networks-on-Chip: a critical survey and a verified
+%  multi-dimensional evaluation (v3).
+%  Build: python3 build_paper3.py && pdflatex x2
+% =====================================================================
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\IfFileExists{lmodern.sty}{\usepackage{lmodern}\PassOptionsToPackage{}{microtype}}{\PassOptionsToPackage{expansion=false}{microtype}}
+\usepackage[english]{babel}
+\usepackage[margin=2.1cm]{geometry}
+\usepackage{microtype}
+\usepackage[section]{placeins}
+\renewcommand{\topfraction}{0.92}
+\renewcommand{\bottomfraction}{0.85}
+\renewcommand{\textfraction}{0.06}
+\renewcommand{\floatpagefraction}{0.8}
+\renewcommand{\dbltopfraction}{0.92}
+\setcounter{topnumber}{4}
+\setcounter{bottomnumber}{3}
+\setcounter{totalnumber}{6}
+\setlength{\emergencystretch}{1.5em}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,multirow,array,threeparttable,tabularx}
+\usepackage[table]{xcolor}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,shapes.misc,calc,fit,backgrounds,3d,patterns,decorations.pathreplacing}
+\usepackage{pgfplots,pgfplotstable}
+\pgfplotsset{compat=1.17}
+\usepgfplotslibrary{groupplots}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{enumitem}
+\usepackage{caption,subcaption}
+\usepackage[hidelinks]{hyperref}
+\usepackage[capitalise,noabbrev]{cleveref}
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+\newcommand{\pmark}{$\circ$}
+
+\newcommand{\R}{\mathcal{R}}
+\newcommand{\Ch}{\mathcal{C}}
+\newcommand{\Pmin}{\mathcal{P}^{\star}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\ind}{\mathbf{1}}
+\newcommand{\Oc}{\mathcal{O}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\newcommand{\best}[1]{\textbf{#1}}
+\newcommand{\second}[1]{\underline{#1}}
+\newcommand{\ERA}{\textsc{era}}
+\newcommand{\hact}[1]{h^{\mathrm{act}}_{#1}}
+\newcommand{\hfull}[1]{h^{\mathrm{full}}_{#1}}
+\newcommand{\val}[1]{\csname val@#1\endcsname}
+
+\theoremstyle{plain}
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+\definecolor{lay1}{RGB}{214,230,245}
+\definecolor{lay2}{RGB}{225,239,220}
+\definecolor{lay3}{RGB}{247,232,214}
+\definecolor{acc}{RGB}{176,32,40}
+\definecolor{acc2}{RGB}{31,94,160}
+\definecolor{c1}{RGB}{31,94,160}
+\definecolor{c2}{RGB}{176,32,40}
+\definecolor{c3}{RGB}{46,125,50}
+\definecolor{c4}{RGB}{230,126,34}
+\definecolor{c5}{RGB}{106,61,154}
+\definecolor{c6}{RGB}{90,90,90}
+\newcommand{\RQ}[1]{\textbf{RQ#1}}
+\newcommand{\D}[1]{\textbf{D#1}}
+\newcommand{\cls}[1]{\textsf{#1}}
+% latency--load curve from generated coordinates: \curveplot{style}{class}{traffic}
+\newcommand{\curveplot}[3]{\edef\curvetmp{\noexpand\addplot[#1] coordinates {\csname curve@#2@#3\endcsname};}\curvetmp}
+
+%%GEN:macros%%
+%%GEN:plotdata%%
+%%GEN:plotdata2%%
+
+\title{\textbf{Routing in Three-Dimensional Networks-on-Chip:\\
+A Critical Survey and a Verified Multi-Dimensional Evaluation}}
+\author{Ahmed Mesellem\\[2pt]
+\small STIC Laboratory, Abou Bekr Belkaid University, Tlemcen 13000, Algeria\\
+\small \texttt{ahmed.mesellem@univ-tlemcen.dz}}
+% Add co-authors here if applicable.
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent Routing in three-dimensional networks-on-chip (3D NoCs) must remain deadlock-free on scarce and fault-prone vertical links, balance traffic across tiers and resist adversarial traffic. Many algorithms pursue these goals but are evaluated on incompatible simulators, and their correctness arguments are often informal or inherited. This article combines a critical survey of routing for fully connected, vertically partially connected and 2.5D systems with a verified, common evaluation. We review \val{corpus.n} proposals from 2021--2026 against \val{corpus.hist} historical designs and audit their evidence. We then evaluate the \val{cls.n} routing classes behind them on twelve dimensions with explicit pass criteria, using a simulator cross-validated against BookSim~2, a channel-dependency checker that proves deadlock freedom or exhibits dependency cycles, exact fault-reachability analysis, logic synthesis, energy and thermal models, and structural trace analysis, over \val{n.sim} simulations and \val{n.faultmaps} fault maps. No class passes every dimension; vertical-first dimension-order routing and global-load elevator selection pass the most. Escape-channel adaptive routing, proven deadlock-free under the usual assumptions, deadlocked in our simulations when virtual channels were reallocated non-atomically. Sophisticated selection functions gain at most one percent over a credit-based selection, although a tabular Q-router needs storage worth \val{hw.qtable.ratio} baseline routers, and minimal adaptive routing amplifies the latency inflation caused by flooding attacks up to \val{d11.fa.over.xyz}-fold. Spatially correlated TSV faults leave static routes unaffected on average but penalise adaptive ones, and multiply the probability of severing a tier boundary. We derive a decision guide, a reporting standard and a research agenda, and release every artefact.
+\end{abstract}
+
+\noindent\textbf{Keywords:} 3D network-on-chip; adaptive routing; deadlock freedom; fault tolerance; through-silicon via; performance evaluation.

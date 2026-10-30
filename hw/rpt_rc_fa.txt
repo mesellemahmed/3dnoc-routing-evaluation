@@ -1,0 +1,43 @@
+
+6. Printing statistics.
+
+=== rc_fa ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+      212        - wires
+      353        - wire bits
+       26        - public wires
+      167        - public wire bits
+       11        - ports
+       67        - port bits
+      197   208.81 cells
+        3        -   $scopeinfo
+        7    7.448   AND2_X1
+        4     5.32   AND3_X1
+        1    1.596   AND4_X1
+        4     5.32   AOI211_X1
+       17   18.088   AOI21_X1
+        4    6.384   AOI221_X1
+        5    10.64   AOI222_X1
+       13    17.29   AOI22_X1
+       43   22.876   INV_X1
+        9   16.758   MUX2_X1
+       11    8.778   NAND2_X1
+       12   12.768   NAND3_X1
+        1     1.33   NAND4_X1
+       12    9.576   NOR2_X1
+        4    4.256   NOR3_X1
+        4     5.32   OAI211_X1
+       15    15.96   OAI21_X1
+        4    6.384   OAI221_X1
+       18    23.94   OAI22_X1
+        3    5.586   OAI33_X1
+        3    3.192   OR2_X1
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\rc_fa': 208.810000
+     of which used for sequential elements: 0.000000 (0.00%)
+

@@ -1,0 +1,1 @@
+{"deadlock_cycle": -1, "drained": true, "drain_cycles": 482, "stuck_flits": 0, "cycles_run": 12000, "flit_hops_h": 2514663, "flit_hops_v": 2476673, "q_updates": 0, "max_va_wait": 11226, "va_wait_gt1000": 848, "n_packets": 461660, "in_flight_end": 0}

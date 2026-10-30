@@ -1,0 +1,27 @@
+{
+ "ef": {
+  "multi_frac": 0.0,
+  "paths_median": 1.0,
+  "alpha_mean": NaN
+ },
+ "efr": {
+  "multi_frac": 0.0,
+  "paths_median": 1.0,
+  "alpha_mean": NaN
+ },
+ "aesg": {
+  "multi_frac": 0.7529411764705882,
+  "paths_median": 16.0,
+  "alpha_mean": NaN
+ },
+ "adele": {
+  "multi_frac": 0.7529411764705882,
+  "paths_median": 4.0,
+  "alpha_mean": NaN
+ },
+ "fl": {
+  "multi_frac": 0.45526960784313725,
+  "paths_median": 1.0,
+  "alpha_mean": NaN
+ }
+}

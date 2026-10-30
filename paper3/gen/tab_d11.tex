@@ -1,0 +1,25 @@
+\begin{tabular}{@{}lrrrrc@{}}
+\toprule
+Class & \multicolumn{2}{c}{Benign latency, no attack} & \multicolumn{2}{c}{Inflation factor under flooding} & D11 \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+ & PIR 0.003 & PIR 0.006 & PIR 0.003 & PIR 0.006 & \\
+\midrule
+\cls{XYZ} & 14.5 & 15.4 & 36.8 & 36.1 & ref \\
+\cls{ZXY} & 14.5 & 15.4 & \second{24.3} & \second{18.9} & \cmark \\
+\cls{NF} & 14.4 & 15.5 & 230.8 & 273.3 & \xmark \\
+\cls{DyAD} & 14.8 & 16.3 & 209.6 & 241.4 & \xmark \\
+\cls{HAM} & 14.4 & 15.3 & 98.6 & 109.6 & \xmark \\
+\cls{O1T} & 14.5 & 15.7 & \best{15.2} & \best{14.0} & \cmark \\
+\cls{ROMM} & 14.7 & 16.1 & 46.5 & 118.9 & \xmark \\
+\cls{VAL} & 22.9 & 27.1 & 41.7 & 55.6 & \xmark \\
+\cls{FA} & 14.0 & 14.5 & 113.6 & 94.8 & \xmark \\
+\cls{RCA} & 14.0 & 14.5 & 101.6 & 91.7 & \xmark \\
+\cls{QR} & 14.0 & 14.5 & 108.5 & 92.5 & \xmark \\
+\cls{TA} & 14.2 & 15.0 & 93.3 & 89.1 & \xmark \\
+\midrule
+\cls{EF} & 15.9 & 19.0 & \best{41.7} & \best{25.1} & ref \\
+\cls{AES-G} & 15.1 & 17.0 & \second{51.1} & 57.3 & \xmark \\
+\cls{AdEle} & 15.8 & 18.9 & 59.6 & \second{38.6} & \xmark \\
+\cls{FL} & 16.2 & 18.9 & 167.3 & 104.8 & \xmark \\
+\bottomrule
+\end{tabular}

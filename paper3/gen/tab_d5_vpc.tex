@@ -1,0 +1,13 @@
+\begin{tabular}{@{}lrrrrrrc@{}}
+\toprule
+Class & \multicolumn{3}{c}{$p_v=0.2$, $\xi=0$} & \multicolumn{3}{c}{$p_v=0.2$, $\xi=4$} & D5 \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+ & loss & latency & $S_{\mathrm{eff}}^{\mathrm{TSV}}$ & loss & latency & $S_{\mathrm{eff}}^{\mathrm{TSV}}$ & \\
+\midrule
+\cls{EF} & 0.259 & 63.8 & 10.7 & 0.205 & 78.8 & 11.3 & \xmark \\
+\cls{EF-R} & 0.000 & 127.9 & 10.6 & 0.000 & 123.0 & 11.2 & \cmark \\
+\cls{AES-G} & 0.000 & 33.9 & 11.9 & 0.000 & 24.6 & 12.3 & \cmark \\
+\cls{AdEle} & 0.293 & 19.7 & 11.4 & 0.237 & 20.6 & 11.9 & \xmark \\
+\cls{FL} & 0.259 & 21.9 & 10.5 & 0.205 & 22.2 & 11.1 & \xmark \\
+\bottomrule
+\end{tabular}

@@ -1,0 +1,8 @@
+h=3 random 1 -1 False 64
+h=3 random 2 -1 False 208
+h=3 transpose1 1 -1 False 48
+h=3 transpose1 2 -1 True 0
+h=4 random 1 -1 True 0
+h=4 random 2 -1 False 256
+h=4 transpose1 1 -1 True 0
+h=4 transpose1 2 -1 True 0

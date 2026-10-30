@@ -1,0 +1,44 @@
+
+6. Printing statistics.
+
+=== rc_ta ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+      241        - wires
+      424        - wire bits
+       26        - public wires
+      209        - public wire bits
+       11        - ports
+       88        - port bits
+      226   238.07 cells
+        3        -   $scopeinfo
+       12   12.768   AND2_X1
+        5     6.65   AND3_X1
+        4     5.32   AOI211_X1
+       26   27.664   AOI21_X1
+        8   12.768   AOI221_X1
+        1    2.128   AOI222_X1
+       14    18.62   AOI22_X1
+       43   22.876   INV_X1
+        7   13.034   MUX2_X1
+       14   11.172   NAND2_X1
+        8    8.512   NAND3_X1
+        1     1.33   NAND4_X1
+       25    19.95   NOR2_X1
+        3    3.192   NOR3_X1
+        1     1.33   NOR4_X1
+        3     3.99   OAI211_X1
+       14   14.896   OAI21_X1
+        1    1.596   OAI221_X1
+        6   12.768   OAI222_X1
+       15    19.95   OAI22_X1
+        6   11.172   OAI33_X1
+        6    6.384   OR2_X1
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\rc_ta': 238.070000
+     of which used for sequential elements: 0.000000 (0.00%)
+

@@ -1,0 +1,1 @@
+{"routing": "nf", "topo": "fc", "channels_with_deps": 2554, "edges": 16864, "states": 219712, "cyclic": false, "escape": false, "escape_cyclic": false, "escape_to_adaptive": 0, "adaptive_states_without_escape": 0, "dead_ends": 0, "missing_links": 0, "nonminimal_moves": 0, "verdict": "acyclic CDG (deadlock-free)", "cycle": [], "cycle_length": 0}

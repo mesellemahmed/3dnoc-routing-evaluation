@@ -1,0 +1,34 @@
+
+6. Printing statistics.
+
+=== qr_update ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+      136        - wires
+      212        - wire bits
+        5        - public wires
+       81        - public wire bits
+        4        - ports
+       64        - port bits
+      147  175.826 cells
+       14   14.896   AND2_X1
+        4     5.32   AND3_X1
+        1     1.33   AOI211_X1
+       19   20.216   AOI21_X1
+       10     5.32   INV_X1
+       12    9.576   NAND2_X1
+        2    2.128   NAND3_X1
+       17   13.566   NOR2_X1
+        1    1.064   NOR3_X1
+        2     2.66   OAI211_X1
+        5     5.32   OAI21_X1
+        3    5.586   OAI33_X1
+        4    4.256   OR2_X1
+       25     39.9   XNOR2_X1
+       28   44.688   XOR2_X1
+
+   Chip area for module '\qr_update': 175.826000
+     of which used for sequential elements: 0.000000 (0.00%)
+

@@ -1,0 +1,204 @@
+% =====================================================================
+\section{Survey methodology}
+\label{sec:survey-method}
+
+\paragraph{Scope.} We include peer-reviewed proposals of routing algorithms or selection policies for fully connected 3D meshes, vertically partially connected stacks, 2.5D chiplet networks and hybrid wired--wireless 3D networks published between January 2021 and October 2026, together with 2D proposals that report a 3D evaluation. We exclude task mapping, scheduling and thermal management that do not change routing decisions, purely wireless or optical interconnects, and routing proposals of the present authors. Historical designs published before 2021 are included as reference points when they define a routing relation still used as a baseline or as the deadlock argument of later work.
+
+\paragraph{Identification.} Candidates were identified by keyword searches of publisher databases and scholarly indexes (IEEE Xplore, ACM Digital Library, SpringerLink, ScienceDirect, MDPI, dblp, OpenAlex, Crossref) with combinations of \emph{3D NoC}, \emph{3D network-on-chip}, \emph{partially connected}, \emph{elevator}, \emph{TSV}, \emph{chiplet}, \emph{interposer} with \emph{routing}, \emph{fault-tolerant}, \emph{thermal-aware}, \emph{deadlock}, \emph{reinforcement learning} and \emph{security}, followed by backward snowballing from recent surveys~\cite{touati2020survey,kaur2024mapping,muhsen2024review,biglari2024survey,ibarra2026learning,kondoth2026survey} and from the reference lists of included papers.
+
+\paragraph{Verification standard.} Every attribute in \cref{tab:corpus,tab:hist} was read from the full text or, when the full text was not accessible to us, from the publisher record. An attribute that could not be verified from either is marked n/v rather than inferred from the abstract, the title or secondary citations. Bibliographic data were checked against the publisher or a DOI registry. One directly relevant survey, on routing algorithms and router microarchitectures of 3D NoCs (Journal of Systems Architecture, 2025; ScienceDirect PII S1383762125001018), was not accessible to us and its author list could not be verified; it is therefore not cited formally, and \cref{tab:surveys} does not position our work against it.
+
+\paragraph{Limitations.} The corpus is curated, not exhaustive: we do not claim to have found every 3D routing paper of the period, and we report no screening counts that we could not reproduce. Its purpose is to support a critical review and a reproducible audit (\cref{sec:practice}); the evaluation of \cref{sec:protocol,sec:results} does not depend on the corpus being complete, because it evaluates the routing \emph{classes} on which the surveyed proposals are built (\cref{tab:classes}).
+
+% =====================================================================
+\section{Taxonomy and corpus}
+\label{sec:taxonomy}
+
+We classify proposals along four orthogonal axes (\cref{fig:taxonomy}). Axis~A is the \emph{integration style} (\cref{sec:bg-arch}). Axis~B is the \emph{mechanism} by which the proposal obtains adaptivity while preserving deadlock freedom: deterministic or oblivious routes; turn restrictions, including turn models designed by hand, by number-theoretic rules or by integer linear programming; node labelling (Hamiltonian, circular); escape channels in the sense of \cref{thm:duato}; ordered virtual networks, which is how most VPC and 2.5D schemes separate up-going from down-going traffic; reconfigurable tables; learned selection; and heuristic selection, including probabilistic beltways and game-theoretic schemes. Axis~C is the \emph{objective} (congestion, planar faults, vertical faults, thermal behaviour, energy, security). Axis~D is the \emph{information} used by the selection: local (own buffers and credits), regional (one- or two-hop neighbourhood, aggregated congestion as in RCA~\cite{gratz2008rca}), global (a network-wide view, online or computed offline), or learned (tables updated from experience). The axes are orthogonal in principle, and correlated in practice: VPC proposals favour virtual networks and elevator-level information, learning-based proposals target thermal and fault objectives, and 2.5D proposals concentrate on deadlock composition.
+
+\begin{figure}[tbp]
+\centering
+\begin{tikzpicture}[
+  font=\scriptsize,
+  root/.style={draw=black,fill=black!8,rounded corners=2pt,inner sep=4pt,font=\small\bfseries},
+  axis/.style={draw=acc2,fill=acc2!10,rounded corners=2pt,text width=3.55cm,align=center,inner sep=3pt,font=\footnotesize\bfseries},
+  leaf/.style={draw=black!35,fill=white,rounded corners=1.5pt,text width=3.55cm,align=left,inner sep=2.5pt},
+  edge/.style={draw=black!50,-{Stealth[length=3pt]}}]
+\node[root] (r) at (0,0) {Routing in 3D networks-on-chip};
+\node[axis] (A) at (-6.15,-1.0) {A. Integration style};
+\node[axis] (B) at (-2.05,-1.0) {B. Mechanism};
+\node[axis] (C) at (2.05,-1.0) {C. Objective};
+\node[axis] (D) at (6.15,-1.0) {D. Information};
+\foreach \n in {A,B,C,D} \draw[edge] (r.south) -- (\n.north);
+% axis A
+\node[leaf,below=3pt of A] (A1) {3D-FC mesh~\cite{pavlidis2007topologies}\\ \textit{FT-PDC, RLARA, TTQR, Li et al.}};
+\node[leaf,below=2pt of A1] (A2) {VPC with elevators~\cite{dubois2013elevator}\\ \textit{AdEle(+), CTWR, STAR, Reflect3d}};
+\node[leaf,below=2pt of A2] (A3) {2.5D chiplets/interposer\\ \textit{DeFT, ReD, Remote Control, FCARA}};
+\node[leaf,below=2pt of A3] (A4) {Hybrid wired--wireless 3D\\ \textit{ATLAS}};
+% axis B
+\node[leaf,below=3pt of B] (B1) {Deterministic / oblivious\\ \textit{XYZ, ZXY, O1TURN, ROMM, Valiant}};
+\node[leaf,below=2pt of B1] (B2) {Turn restrictions\\ \textit{NF, 4NP-First, MPTM, prime, ILP}};
+\node[leaf,below=2pt of B2] (B3) {Labelling\\ \textit{HamFA, circular}};
+\node[leaf,below=2pt of B3] (B4) {Escape channels (Duato)\\ \textit{FA, RCA, Q-, thermal selections}};
+\node[leaf,below=2pt of B4] (B5) {Ordered virtual networks\\ \textit{EF, First-Last, Reflect3d, DeFT, ReD}};
+\node[leaf,below=2pt of B5] (B6) {Learned / heuristic / game\\ \textit{TTQR, RLARA, BLAR-3D, STAR}};
+% axis C
+\node[leaf,below=3pt of C] (C1) {Congestion and load balance\\ \textit{\val{corpus.obj.congestion} of \val{corpus.n} corpus works}};
+\node[leaf,below=2pt of C1] (C2) {Faults: planar, TSV, VL\\ \textit{\val{corpus.obj.faults} works}};
+\node[leaf,below=2pt of C2] (C3) {Thermal\\ \textit{\val{corpus.obj.thermal} works}};
+\node[leaf,below=2pt of C3] (C4) {Energy\\ \textit{\val{corpus.obj.energy} works}};
+\node[leaf,below=2pt of C4] (C5) {Security (DoS, Trojans)\\ \textit{\val{corpus.obj.security} works}};
+% axis D
+\node[leaf,below=3pt of D] (D1) {Local: own buffers, credits};
+\node[leaf,below=2pt of D1] (D2) {Regional: 1--2 hops, RCA};
+\node[leaf,below=2pt of D2] (D3) {Global: online or offline\\ \textit{\val{corpus.info.global} works}};
+\node[leaf,below=2pt of D3] (D4) {Learned tables\\ \textit{\val{corpus.info.learned} works}};
+\end{tikzpicture}
+\caption{Four-axis taxonomy. Leaves list representative designs; counts refer to the \val{corpus.n}-work corpus of \cref{tab:corpus} (a work may pursue several objectives).}
+\label{fig:taxonomy}
+\end{figure}
+
+\Cref{tab:corpus} lists the \val{corpus.n} works of the corpus and \cref{tab:hist} the \val{corpus.hist} historical reference designs. Three features of the corpus are worth stating before the review. First, the field is active and dispersed: \val{corpus.y2021}, \val{corpus.y2022}, \val{corpus.y2023}, \val{corpus.y2024}, \val{corpus.y2025} and \val{corpus.y2026} works appeared in 2021--2026 respectively, in venues ranging from DAC and IEEE Transactions on Computers to regional journals. Second, \val{corpus.vpc} works target VPC stacks and \val{corpus.25d} target 2.5D systems, so that more than a third of the recent effort concerns topologies in which vertical connectivity is scarce by design. Third, congestion is the most frequent objective (\val{corpus.obj.congestion} works); \val{corpus.obj.faults} works target faults and \val{corpus.obj.thermal} temperature, often together with congestion, and only \val{corpus.obj.security} target security.
+
+\begin{table}[p]
+\centering
+\caption{Corpus of routing proposals for 3D, VPC and 2.5D NoCs, 2021--2026. DL, deadlock argument: F formal and inspectable (dependency graph, Duato, ordered virtual networks, turn-model proof); R inherited from a cited deadlock-free routing function; C claimed without an inspectable argument; I deadlock risk reduced or detected, not excluded; N not discussed; n/v not verifiable from an accessible record. Baselines: det.\ deterministic only; adapt.\ at least one adaptive or congestion-aware baseline.}
+\label{tab:corpus}
+\scriptsize
+\setlength{\tabcolsep}{2.4pt}
+\renewcommand{\arraystretch}{1.08}
+\input{gen/tab_corpus.tex}
+\end{table}
+
+\begin{table}[tbp]
+\centering
+\caption{Historical reference designs (before 2021) used as baselines or as deadlock arguments by the corpus. Deadlock argument as in \cref{tab:corpus}.}
+\label{tab:hist}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\input{gen/tab_hist.tex}
+\end{table}
+
+% =====================================================================
+\section{Critical review}
+\label{sec:review}
+
+We review the field family by family. For each family we state the mechanism, the evidence offered for it, and what our common evaluation (\cref{sec:results}) adds. Forward references point to the dimension (\D{1}--\D{12}) that tests each claim.
+
+\subsection{Deterministic and oblivious routing}
+\label{sec:rev-det}
+
+Dimension-order routing is the baseline of almost every paper in the corpus, almost always in the XYZ order. Its virtues are well known: an acyclic CDG with a single VC (\cref{thm:dally}), in-order delivery when a flow is confined to one VC (\cref{tab:reorder}), and logic small enough to be negligible (\D{8}). Its weaknesses are equally known: no path diversity and therefore no tolerance of a single faulty link on the route, and worst-case throughput on adversarial permutations that can be a small fraction of uniform throughput. Oblivious routing randomises the route without looking at the network: O1TURN chooses between two dimension orders per packet and reaches near-optimal worst-case throughput in 2D meshes with two VCs~\cite{seo2005o1turn}; ROMM chooses a random intermediate node inside the minimal box~\cite{nesson1995romm}; Valiant's scheme chooses it anywhere, trading twice the average distance for load balance on any permutation~\cite{valiant1981universal}.
+
+Two observations recur in our evaluation. First, the dimension \emph{order} matters as much as determinism. Routing vertically first (ZXY), as AFRA does in its fault-free mode~\cite{akbari2012afra}, spreads vertical traffic over all columns and breaks the alignment that makes XYZ collapse on bit-reversal and similar patterns; ZXY is the only fully connected class that passes our traffic-robustness criterion (\D{4}, \cref{sec:rq-perf}). Second, comparing a new adaptive algorithm with XYZ only is a weak test: XYZ is close to the best possible class on uniform traffic and among the worst on bit-reversal-like permutations, so the outcome of the comparison is determined by the choice of traffic.
+
+\subsection{Turn restrictions and labelling}
+\label{sec:rev-turn}
+
+Turn-model routing obtains adaptiveness without VCs by forbidding enough turns to break every cycle of the CDG~\cite{glass1992turn}. In 3D, negative-first, 4NP-First~\cite{pasricha2011lowoverhead} and the odd--even family~\cite{chiu2000oddeven} restrict different turn sets; MPTM uses a repetitive-turn concept to raise adaptiveness without VCs~\cite{cai2020mptm}; the prime-number turn model of Sharma et~al.\ restricts turns according to number-theoretic properties of node coordinates~\cite{sharma2023prime}; and Liu and Radetzki compute optimal turn restrictions for chiplet systems by integer linear programming~\cite{liu2024ilp}. Labelling schemes order the nodes along a Hamiltonian path (HamFA~\cite{ebrahimi2013hamfa}, after Lin et~al.~\cite{lin1994hamiltonian}) or along circular paths~\cite{alizadeh2014circular}; label-monotone moves are deadlock-free, and the two sub-networks of increasing and decreasing labels may use non-minimal moves around faults.
+
+The weakness of the family is the asymmetry of its adaptiveness. Negative-first routing is fully adaptive for some quadrants of the offset space and deterministic for others; the 3D variant admits more than one path for \val{d2.nf.multi}\% of ordered pairs but only a fraction $\alpha=\val{d2.nf.alpha}$ of the minimal paths on average (\D{2}). This asymmetry turns into hot spots under load: in our sweeps the negative-first class saturates at \val{d3.sat.nf.random} flits/node/cycle on uniform traffic against \val{d3.sat.xyz.random} for XYZ (\D{3}). The Hamiltonian class admits many paths (\val{d2.ham.median} paths for the median pair) but concentrates traffic along the snake, and saturates at \val{d3.sat.ham.random}. Claims of turn-model papers are usually supported by a proof of deadlock freedom, which is the strength of the family; the prime turn model is an exception, since it claims deadlock freedom without an argument that a reader can check (\cref{tab:corpus}).
+
+\subsection{Escape-channel adaptive routing and selection functions}
+\label{sec:rev-escape}
+
+Most adaptive proposals for 3D-FC meshes keep a minimal fully adaptive routing relation and protect it with an escape subnetwork (\cref{thm:duato}); their contribution is the \emph{selection function}. RCA aggregates congestion along each dimension~\cite{gratz2008rca}; DyAD switches between deterministic and adaptive modes~\cite{hu2004dyad}; FT-PDC selects by path diversity using two-hop information~\cite{khodadadi2022ftpdc}; 3DEP aims at an even distribution of traffic~\cite{vahdatpanah2019threedep}; Gaffour et~al.\ compare a congestion-aware selection in 2D and 3D~\cite{gaffour2023congestion}; Li et~al.\ define diagonal regions to co-optimise fault tolerance and congestion~\cite{jiao2023aftc}; PDA-HyPAR combines planar-adaptive routing~\cite{chien1995planar} with path-diversity awareness~\cite{dai2018pdahypar}; LEAD verifies its adaptive routing with a queueing model~\cite{salamat2018lead}.
+
+The family deserves two criticisms. The first concerns correctness. The guarantee of \cref{thm:duato} holds for atomic VC reallocation; a paper that relies on it must therefore state which reallocation its router uses, which we found difficult to establish from the records we read, several of which are evaluated on simulators whose router is not described in the paper. \Cref{prop:nonatomic} shows that the guarantee is lost under non-atomic reuse, and our simulator turns this into an observation: every escape-based class deadlocked in at least half of its overload runs under non-atomic reallocation (\D{1}, \cref{sec:rq-correct}). The second concerns the evidence for the selection functions themselves. Under a paired design with common random numbers, regional congestion awareness, Q-routing and thermal-aware selection are within one percent of the simplest selection (largest number of free credits) on non-hotspot traffic (\cref{tab:stats}), and on hotspot traffic all of them, like the simplest selection, are more than four times slower than XYZ (\cref{tab:d4fc}); what they add is area, storage and side-band wiring (\D{8}). A gain over XYZ therefore says little about a selection function: the baseline it must beat is a well-implemented credit-based minimal adaptive selection with the same VCs and buffers.
+
+\subsection{Elevator routing in partially connected stacks}
+\label{sec:rev-vpc}
+
+Elevator-First routes every inter-tier packet to an elevator, through two virtual networks for up-going and down-going traffic that keep the CDG acyclic~\cite{dubois2013elevator}. Later work refines the elevator choice and the planar sub-routes. REDELF targets energy efficiency~\cite{lee2015redelf}; the resilient scheme of Salamat et~al.\ adds a formal reliability analysis for VPC stacks~\cite{salamat2016resilient}; First-Last uses positive-first and positive-last virtual networks to obtain adaptiveness with two VCs~\cite{charif2018firstlast}; CDA assigns elevators dynamically using buffer information collected from the whole network~\cite{fu2019cda}; AdEle and AdEle+ precompute for each node a subset of candidate elevators offline and choose online among them with a congestion- and energy-aware skip policy~\cite{taheri2021adele,taheri2023adeleplus}; Reflect3d embeds four ordered virtual networks on two VCs to search for a healthy elevator~\cite{silva2021reflect3d}; CTWR combines congestion, temperature and wear into an inter-layer decision~\cite{ctwr2025}; Securet3d adds secure path establishment~\cite{dasilva2025securet3d}; STAR formulates inter-layer routing as a Stackelberg game over thermal, delay and throughput objectives~\cite{ning2026star}.
+
+Deadlock freedom is comparatively well argued in this family: of the three members whose argument we could inspect, AdEle and AdEle+ inherit the virtual-network argument of Elevator-First explicitly and Reflect3d gives its own formal argument. It is also the family in which the evaluation is most sensitive to the elevator selection: in our runs, a global-load selection reduces latency by a median of \val{st.aesg.ef.nonhotspot.medabs}\% with respect to nearest-elevator selection and is the only VPC class that passes the traffic-robustness criterion (\D{4}), whereas the subset-based local selection of AdEle passes neither \D{4} nor \D{5} in our configuration. The global information that makes elevator selection effective must, however, be collected and distributed by hardware that none of the global schemes costs in its evaluation (\D{8}). And static elevator assignment loses every packet whose assigned elevator has failed---on average up to a fraction \val{d5.vpc.ef.maxdrop} of all injected packets per fault configuration in our runs, and up to \val{d5.vpc.ef.runmax} in a single run (\D{5}).
+
+\subsection{Fault-tolerant routing}
+\label{sec:rev-fault}
+
+Fault tolerance in 3D NoCs ranges from reconfigurable inter-layer routing (RILM~\cite{rusu2010rilm}) and turn-model schemes (4NP-First~\cite{pasricha2011lowoverhead}) to detours around faulty vertical links (AFRA's XZXY detours~\cite{akbari2012afra}), table-based schemes combined with odd--even routing (LOFT~\cite{zhou2016loft}), congestion-aware proximity routing (FT-DyXYZ~\cite{jouybari2014dyxyz}), reliable adaptive routing (HARS~\cite{zhou2014hars}), distributed adaptive schemes (ADFT~\cite{mogharrabi2020adft}) and, in the corpus, passage-based detours~\cite{kurokawa2025passage}, diagonal regions~\cite{jiao2023aftc}, TSV-aware reinforcement learning~\cite{jiao2023rlara} and hierarchical planning with local adaptation over wired and wireless links~\cite{singh2026atlas}. On 2.5D systems, DeFT and ReD tolerate faulty vertical links between chiplets and interposer while keeping deadlock freedom with virtual networks~\cite{taheri2022deft,taheri2024red}, and FCARA adds a joint fault--congestion cost~\cite{zhou2025fcara}. Outside 3D, recent work combines fault tolerance with quality-of-service priorities~\cite{yu2025topsis}.
+
+Three gaps stand out. First, fault models are independent and identically distributed almost everywhere, although TSV defects are known to cluster~\cite{dang2021hotcluster,wang2015clustering}; we did not find an inspectable record of the corpus that injects spatially correlated vertical faults. \Cref{sec:analytical} shows that correlation does not change the expected reachability of a static route but penalises local adaptive policies and raises the probability that a whole tier boundary is severed---by a factor of five or more with four elevators per boundary and by many orders of magnitude for dense layouts---which no routing algorithm can survive. Second, fault-tolerance claims are rarely separated from what any algorithm could achieve: we compare every policy with the connectivity bound of the faulty graph (\D{5}). Third, reconfiguration and learning-based schemes keep deadlock freedom by construction only if the reconfigured relation is checked; RLARA, for instance, reduces deadlock risk without excluding it (\cref{tab:corpus}).
+
+\subsection{Thermal-aware routing}
+\label{sec:rev-thermal}
+
+Thermal-aware schemes steer traffic away from hot regions, either reactively from temperature sensors or proactively from predicted heat: the Q-function scheme of Lee and Han restricts learned choices to a safe set~\cite{lee2020qthermal}; STTAR scores candidate ports and resizes buffers~\cite{fang2022sttar}; directional schemes restrict the direction of minimal moves~\cite{kaleem2022directional}; LETHOR limits entrances to hot regions~\cite{safari2022lethor}; TTQR keeps separate Q-tables for traffic and temperature~\cite{liu2022ttqr}; AMBTAR uses probabilistic non-minimal beltways~\cite{dadmand2025ambtar}; STAR and CTWR include temperature in elevator selection~\cite{ning2026star,ctwr2025}. Thermal management of 3D systems more broadly relies on compact models such as 3D-ICE~\cite{sridhar2010ice} and combines routing with task migration and dynamic voltage and frequency scaling~\cite{huang2024dtm,tang2025migration,chen2023mlthermal}.
+
+The critical question is leverage: how much can routing alone change temperature? In a 3D stack the dominant heat sources are the cores, and the network's share of power is a fraction of the total. Our compact model (\cref{sec:analytical}) shows that minimal routing changes the peak temperature by at most a few tenths of a kelvin relative to XYZ, that thermal-aware selection lowers it by \val{d10.ta.bestabs}\,K in the most favourable of our eight scenarios and by only \val{d10.ta.worstabs}\,K in the least favourable, and that non-minimal routing raises it by up to \val{d10.val.worstabs}\,K (\D{10}). Proposals reporting larger thermal benefits should state the network's share of power and the thermal parameters that produce them.
+
+\subsection{Learning-based routing}
+\label{sec:rev-learning}
+
+Q-routing~\cite{boyan1994qrouting} estimates delivery times per destination and output port and updates them from neighbours' estimates. Its 3D descendants add thermal objectives (TTQR~\cite{liu2022ttqr}), TSV awareness with clustering (RLARA~\cite{jiao2023rlara}) or regulated exploration (BLAR-3D~\cite{aslan2026blar}); deep reinforcement learning frameworks such as DRLAR target 2D NoCs~\cite{wang2024drlar}. A recent scoping review of 48 studies of learning-based NoC routing reports missing deadlock guarantees and finds that only 37.5\% report synthesis results~\cite{ibarra2026learning}; see also the roadmap of Balamurugan et~al.~\cite{balamurugan2022roadmap}.
+
+Our evaluation sharpens this diagnosis in two ways. A tabular Q-router for a 256-node mesh stores one estimate per destination and output port: \val{hw.qtable.bits} bits per router at 16 bits per entry, \val{hw.qtable.ratio} times the area of the whole two-VC baseline router in flip-flops (\D{8}). And once the Q-selection is placed on an escape-protected minimal relation---the only way we found to make it deadlock-free---it is practically equivalent to the simplest credit-based selection: the median paired difference is \val{st.qr.fa.nonhotspot.medabs}\%, although the small difference is statistically detectable (Holm $p$ = \val{st.qr.fa.nonhotspot.p}, \cref{tab:stats}). Learning can be justified in 3D NoCs, but only against a strong adaptive baseline and with its storage, update traffic and deadlock argument costed.
+
+\subsection{Security-aware routing}
+\label{sec:rev-security}
+
+NoC security work catalogues eavesdropping, spoofing, denial-of-service (DoS) and hardware-Trojan threats~\cite{charles2021security,weerasena2023security}. Routing-level countermeasures in the corpus conceal paths against distributed DoS in chiplet systems (SCRIPT~\cite{taheri2024script}) or establish secure paths in VPC stacks (Securet3d~\cite{dasilva2025securet3d}); Rajan et~al.\ mitigate time-delay Trojans with a secure routing framework~\cite{rajan2023trojan}. An under-studied question is whether adaptivity itself changes the exposure to flooding. Our DoS experiment (\D{11}) gives a first answer: under eight flooding sources aimed at one node, and at the lower of our two benign loads, minimal adaptive routing inflates the latency of delivered benign packets \val{d11.fa.over.xyz} times more than XYZ, negative-first \val{d11.nf.over.xyz} times more, whereas the inflation of O1TURN is only \val{d11.o1t.over.xyz} times that of XYZ (\cref{sec:rq-cost} also reports the benign packets left undelivered). A plausible explanation is that adaptive routing spreads the attacker's congestion over more paths and so exposes more benign flows to it.
+
+\subsection{2.5D, deflection and wireless schemes}
+\label{sec:rev-25d}
+
+Chiplet systems raise a composition problem: each chiplet may be internally deadlock-free while the system is not. Modular routing restricts turns at chiplet boundaries~\cite{yin2018modular}; Remote Control reserves boundary buffers to avoid deadlock~\cite{majumder2021remote}; DeFT and ReD use virtual networks with distinct turn models~\cite{taheri2022deft,taheri2024red}; the ILP design of Liu and Radetzki optimises the restrictions~\cite{liu2024ilp}. These works are, as a group, the most careful of the corpus about deadlock. Bufferless deflection routing, evaluated in 3D with interleaved asymmetric edge routers by Kunthara et~al.~\cite{kunthara2021edge}, avoids deadlock by construction but must bound livelock. Hybrid wired--wireless schemes such as ATLAS~\cite{singh2026atlas} add wireless links whose arbitration and failure modes are rarely modelled in routing evaluations. Our evaluation does not cover 2.5D, deflection or wireless designs; their routing relations depend on interposer topologies and wireless media that would require models of their own (\cref{sec:threats}).
+
+% =====================================================================
+\section{Audit of evaluation practice}
+\label{sec:practice}
+
+\Cref{tab:audit} summarises how the corpus supports its claims. We report counts over the records in which an attribute could be verified, and the number of unverifiable records separately.
+
+\begin{table}[tbp]
+\centering
+\caption{Audit of the \val{corpus.n}-work corpus. Counts are over the records in which the attribute could be verified; every count except the last row is computed from the coded attributes of the artefact.}
+\label{tab:audit}
+\small
+\begin{tabular}{@{}lrl@{}}
+\toprule
+Attribute & Count & Comment \\
+\midrule
+Deadlock argument verifiable & \val{corpus.dl.verif} & \val{corpus.dl.nv} records not verifiable \\
+\quad formal and inspectable (F) & \val{corpus.formal} & mostly VPC and 2.5D schemes \\
+\quad inherited from a cited function (R) & \val{corpus.inherit} & AdEle, AdEle+ (Elevator-First) \\
+\quad claimed, mitigated or absent (C, I, N) & \val{corpus.weak} & Prime turn model, RLARA, FCARA \\
+\addlinespace
+Simulator identifiable & \val{corpus.sim.verif} & \val{corpus.simfamilies} simulator families (\val{corpus.simdistinct} tools) \\
+\quad Noxim and derivatives & \val{corpus.noxim} & router micro-architecture rarely stated \\
+\addlinespace
+Baselines verifiable & \val{corpus.base.verif} & \\
+\quad deterministic baselines only & \val{corpus.detonly} & XYZ-only comparisons \\
+\quad at least one adaptive baseline & \val{corpus.adapt} & \\
+\addlinespace
+Correlated vertical faults injected & 0 & none found in the records we read (not coded) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Four findings follow. (i) Of the \val{corpus.dl.verif} records whose deadlock argument we could inspect, \val{corpus.formal} give a formal argument, \val{corpus.inherit} inherit one, and \val{corpus.weak} claim deadlock freedom without an argument, merely reduce the risk, or do not discuss it. (ii) The \val{corpus.sim.verif} identifiable evaluations use \val{corpus.simfamilies} different simulator families (\val{corpus.simdistinct} tools if the Noxim variants are counted separately), \val{corpus.noxim} of them Noxim~\cite{catania2015noxim} or a derivative, with router models that differ in pipeline depth, buffering and allocation; results are therefore not comparable across papers. Because the correctness of escape-based designs depends on the VC reallocation policy (\cref{prop:nonatomic}), that policy should be stated; we found it difficult to locate in the records we read. (iii) Of the \val{corpus.base.verif} records whose baselines we could verify, \val{corpus.detonly} compares with deterministic baselines only; the others include at least one adaptive or congestion-aware baseline. (iv) We found no record whose fault model includes the spatial correlation of TSV defects.
+
+These findings motivate the minimum reporting standard of \cref{tab:checklist}. None of its items is new in isolation; what is missing is their systematic application. Each item corresponds to one or more dimensions of our protocol, which shows that they are affordable.
+
+\begin{table}[tbp]
+\centering
+\caption{Minimum reporting standard proposed for 3D NoC routing papers, with the protocol dimension that implements each item in this article.}
+\label{tab:checklist}
+\small
+\begin{tabularx}{\linewidth}{@{}rX>{\raggedright\arraybackslash}p{2.0cm}@{}}
+\toprule
+\# & Item & This article \\
+\midrule
+1 & Deadlock-freedom argument for the routing relation \emph{and} the router: VC reallocation policy, escape usage, virtual-network ordering; ideally a mechanised check & \D{1}, \cref{sec:checker} \\
+2 & Baselines: one deterministic, one oblivious and one well-implemented minimal adaptive routing with the same VCs and buffers & \val{cls.n} classes \\
+3 & Traffic: uniform, at least two adversarial permutations, hotspot, bursty traffic, and a flooding scenario & \D{3}, \D{4}, \D{11} \\
+4 & Full latency--load curves up to saturation with an explicit saturation criterion; overload behaviour & \D{3} \\
+5 & At least five seeds per point, confidence intervals, paired tests with multiplicity correction & \cref{sec:stats} \\
+6 & Fault model with stated marginals and spatial correlation; comparison with the connectivity bound & \D{5} \\
+7 & Synthesised area of route and selection logic and of all added storage and wiring, including reorder buffers when packets of a flow can overtake each other & \D{8}, \cref{tab:reorder} \\
+8 & Energy and thermal models with all parameters, and their sensitivity & \D{9}, \D{10} \\
+9 & Sensitivity of conclusions to router parameters and network size & \D{12} \\
+10 & Release of simulator, configurations, raw results and analysis scripts & artefact \\
+\bottomrule
+\end{tabularx}
+\end{table}

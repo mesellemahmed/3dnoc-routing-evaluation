@@ -1,0 +1,1346 @@
+[
+ {
+  "routing": "xyz",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.0005628436593496991
+ },
+ {
+  "routing": "xyz",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.0004746698886683352
+ },
+ {
+  "routing": "xyz",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.0003472975906229651
+ },
+ {
+  "routing": "xyz",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.006422732580770728
+ },
+ {
+  "routing": "xyz",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.006484134335753215
+ },
+ {
+  "routing": "xyz",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.006613070539419087
+ },
+ {
+  "routing": "xyz",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.01179027186979841
+ },
+ {
+  "routing": "xyz",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.012266838187999632
+ },
+ {
+  "routing": "xyz",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.009372245163086346
+ },
+ {
+  "routing": "xyz",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.21063400836517918
+ },
+ {
+  "routing": "xyz",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.2109060799621481
+ },
+ {
+  "routing": "xyz",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.21483605088693783
+ },
+ {
+  "routing": "zxy",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.0004329566610382301
+ },
+ {
+  "routing": "zxy",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.0006904289289721239
+ },
+ {
+  "routing": "zxy",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.0004341219882787063
+ },
+ {
+  "routing": "zxy",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.005968599974049566
+ },
+ {
+  "routing": "zxy",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.006268714590379354
+ },
+ {
+  "routing": "zxy",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.005770228215767635
+ },
+ {
+  "routing": "zxy",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.0005085999630109118
+ },
+ {
+  "routing": "zxy",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.00032160249931085177
+ },
+ {
+  "routing": "zxy",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.0003247807729782397
+ },
+ {
+  "routing": "zxy",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.0046225673739194745
+ },
+ {
+  "routing": "zxy",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.005621457907899869
+ },
+ {
+  "routing": "zxy",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.005960219003395939
+ },
+ {
+  "routing": "nf",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.0003463653288305841
+ },
+ {
+  "routing": "nf",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.00034521446448606196
+ },
+ {
+  "routing": "nf",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.0003907097894508357
+ },
+ {
+  "routing": "nf",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.003351931144846676
+ },
+ {
+  "routing": "nf",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.0035975097477434783
+ },
+ {
+  "routing": "nf",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.0033065352697095435
+ },
+ {
+  "routing": "nf",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.0008322544849269465
+ },
+ {
+  "routing": "nf",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.0007350914269962326
+ },
+ {
+  "routing": "nf",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.0006959587992390851
+ },
+ {
+  "routing": "nf",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.017635094531502797
+ },
+ {
+  "routing": "nf",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.016313700295986968
+ },
+ {
+  "routing": "nf",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.019688041594454073
+ },
+ {
+  "routing": "dyad",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.0022946703035026193
+ },
+ {
+  "routing": "dyad",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.0021575904030378874
+ },
+ {
+  "routing": "dyad",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.002127197742565661
+ },
+ {
+  "routing": "dyad",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.0617863321799308
+ },
+ {
+  "routing": "dyad",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.061006871889877426
+ },
+ {
+  "routing": "dyad",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.06278773207685824
+ },
+ {
+  "routing": "dyad",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.0020806362123173662
+ },
+ {
+  "routing": "dyad",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.0023431039235504918
+ },
+ {
+  "routing": "dyad",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.0016703011181738042
+ },
+ {
+  "routing": "dyad",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.07308821801949959
+ },
+ {
+  "routing": "dyad",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.06494353242519502
+ },
+ {
+  "routing": "dyad",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.07423274106327692
+ },
+ {
+  "routing": "ham",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.00021647833051911504
+ },
+ {
+  "routing": "ham",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.00043151808060757745
+ },
+ {
+  "routing": "ham",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.0002604731929672238
+ },
+ {
+  "routing": "ham",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.0038709398382422906
+ },
+ {
+  "routing": "ham",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.005234699812584821
+ },
+ {
+  "routing": "ham",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.004776106500691563
+ },
+ {
+  "routing": "ham",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.000184945441094877
+ },
+ {
+  "routing": "ham",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.000597261784434439
+ },
+ {
+  "routing": "ham",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.000278383519695634
+ },
+ {
+  "routing": "ham",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.003027781629917256
+ },
+ {
+  "routing": "ham",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.003349930018585228
+ },
+ {
+  "routing": "ham",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.002702890013167926
+ },
+ {
+  "routing": "o1t",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.000995800320387929
+ },
+ {
+  "routing": "o1t",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.0008198843531543972
+ },
+ {
+  "routing": "o1t",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.001172129368352507
+ },
+ {
+  "routing": "o1t",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.006574110116344449
+ },
+ {
+  "routing": "o1t",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.006742638030201848
+ },
+ {
+  "routing": "o1t",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.006872406639004149
+ },
+ {
+  "routing": "o1t",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.004577399667098206
+ },
+ {
+  "routing": "o1t",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.0057429017734080675
+ },
+ {
+  "routing": "o1t",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.0056140676471952864
+ },
+ {
+  "routing": "o1t",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.1940428202466871
+ },
+ {
+  "routing": "o1t",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.19791316862556968
+ },
+ {
+  "routing": "o1t",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.19564745337418873
+ },
+ {
+  "routing": "romm",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.004935705935835823
+ },
+ {
+  "routing": "romm",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.005091913351169414
+ },
+ {
+  "routing": "romm",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.004601693075754287
+ },
+ {
+  "routing": "romm",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.050711474417196485
+ },
+ {
+  "routing": "romm",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.05258849128552039
+ },
+ {
+  "routing": "romm",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.050073478561549103
+ },
+ {
+  "routing": "romm",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.0034214906602552247
+ },
+ {
+  "routing": "romm",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.00303225213635946
+ },
+ {
+  "routing": "romm",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.003943766529021482
+ },
+ {
+  "routing": "romm",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.0484445060786761
+ },
+ {
+  "routing": "romm",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.050967253367602175
+ },
+ {
+  "routing": "romm",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.05063992976944046
+ },
+ {
+  "routing": "val",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.015673031129583927
+ },
+ {
+  "routing": "val",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.014455855700353844
+ },
+ {
+  "routing": "val",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.014977208595615368
+ },
+ {
+  "routing": "val",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.08613381774144717
+ },
+ {
+  "routing": "val",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.08907606471209151
+ },
+ {
+  "routing": "val",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.08737465421853388
+ },
+ {
+  "routing": "val",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.014287035324579249
+ },
+ {
+  "routing": "val",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.015023431039235506
+ },
+ {
+  "routing": "val",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.014058367744629518
+ },
+ {
+  "routing": "val",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.07548652521610502
+ },
+ {
+  "routing": "val",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.0785856870798247
+ },
+ {
+  "routing": "val",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.07655878208238039
+ },
+ {
+  "routing": "fa",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.00017318266441529204
+ },
+ {
+  "routing": "fa",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 4.3151808060757745e-05
+ },
+ {
+  "routing": "fa",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.0002604731929672238
+ },
+ {
+  "routing": "fa",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.001448899269062757
+ },
+ {
+  "routing": "fa",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.0017448999375282738
+ },
+ {
+  "routing": "fa",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.002031466113416321
+ },
+ {
+  "routing": "fa",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.00041612724246347326
+ },
+ {
+  "routing": "fa",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.00022971607093632271
+ },
+ {
+  "routing": "fa",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.0006031642926738737
+ },
+ {
+  "routing": "fa",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.002981555956178061
+ },
+ {
+  "routing": "fa",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.002891035495491361
+ },
+ {
+  "routing": "fa",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.0034652436066255456
+ },
+ {
+  "routing": "rca",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.000259773996622938
+ },
+ {
+  "routing": "rca",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.00021575904030378873
+ },
+ {
+  "routing": "rca",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.0001302365964836119
+ },
+ {
+  "routing": "rca",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.0013191470957138532
+ },
+ {
+  "routing": "rca",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.0014433122940048684
+ },
+ {
+  "routing": "rca",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.0011886237897648685
+ },
+ {
+  "routing": "rca",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.00023118180136859627
+ },
+ {
+  "routing": "rca",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 9.188642837452908e-05
+ },
+ {
+  "routing": "rca",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.00041757527954345105
+ },
+ {
+  "routing": "rca",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.0012712060278278557
+ },
+ {
+  "routing": "rca",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.0011013468554252805
+ },
+ {
+  "routing": "rca",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.001293690946473537
+ },
+ {
+  "routing": "qr",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.00030306966272676105
+ },
+ {
+  "routing": "qr",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 8.630361612151549e-05
+ },
+ {
+  "routing": "qr",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.0002604731929672238
+ },
+ {
+  "routing": "qr",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.0015137753557372085
+ },
+ {
+  "routing": "qr",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.0017664419120656599
+ },
+ {
+  "routing": "qr",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.0019882434301521437
+ },
+ {
+  "routing": "qr",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 4.623636027371925e-05
+ },
+ {
+  "routing": "qr",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 9.188642837452908e-05
+ },
+ {
+  "routing": "qr",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.000278383519695634
+ },
+ {
+  "routing": "qr",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.0010169648222622845
+ },
+ {
+  "routing": "qr",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.0011013468554252805
+ },
+ {
+  "routing": "qr",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.0010395730819876636
+ },
+ {
+  "routing": "ta",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.00021647833051911504
+ },
+ {
+  "routing": "ta",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 8.630361612151549e-05
+ },
+ {
+  "routing": "ta",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.00017364879531148254
+ },
+ {
+  "routing": "ta",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.00395744128714156
+ },
+ {
+  "routing": "ta",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.004609982551000625
+ },
+ {
+  "routing": "ta",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.004992219917012448
+ },
+ {
+  "routing": "ta",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.00013870908082115775
+ },
+ {
+  "routing": "ta",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.00022971607093632271
+ },
+ {
+  "routing": "ta",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.000139191759847817
+ },
+ {
+  "routing": "ta",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.002334396523829335
+ },
+ {
+  "routing": "ta",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.002936924947800748
+ },
+ {
+  "routing": "ta",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.003395938734493035
+ },
+ {
+  "routing": "ef",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.03406181419166057
+ },
+ {
+  "routing": "ef",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.039855725879170426
+ },
+ {
+  "routing": "ef",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.0418608902294123
+ },
+ {
+  "routing": "ef",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.3049298185552893
+ },
+ {
+  "routing": "ef",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.3096242923314462
+ },
+ {
+  "routing": "ef",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.29379599697365705
+ },
+ {
+  "routing": "ef",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.011533274426824164
+ },
+ {
+  "routing": "ef",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.011016871024246335
+ },
+ {
+  "routing": "ef",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.015511119416931415
+ },
+ {
+  "routing": "ef",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.10720815557648623
+ },
+ {
+  "routing": "ef",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.11575395083406496
+ },
+ {
+  "routing": "ef",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.11837714096588245
+ },
+ {
+  "routing": "aesg",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.007793219898688141
+ },
+ {
+  "routing": "aesg",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.00863036161215155
+ },
+ {
+  "routing": "aesg",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.009029737356197092
+ },
+ {
+  "routing": "aesg",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.3888800255264837
+ },
+ {
+  "routing": "aesg",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.37984711054778786
+ },
+ {
+  "routing": "aesg",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.382275554138096
+ },
+ {
+  "routing": "aesg",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.0036989088218975404
+ },
+ {
+  "routing": "aesg",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.004226775705228338
+ },
+ {
+  "routing": "aesg",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.0034333967429128194
+ },
+ {
+  "routing": "aesg",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.19955169837346973
+ },
+ {
+  "routing": "aesg",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.22101639535562168
+ },
+ {
+  "routing": "aesg",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.2152689782283147
+ },
+ {
+  "routing": "adele",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.010001298869983116
+ },
+ {
+  "routing": "adele",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.011694139984465349
+ },
+ {
+  "routing": "adele",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.010071630128065986
+ },
+ {
+  "routing": "adele",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.2384202662320022
+ },
+ {
+  "routing": "adele",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.2267673023788665
+ },
+ {
+  "routing": "adele",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.22611552148918698
+ },
+ {
+  "routing": "adele",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.004438690586277048
+ },
+ {
+  "routing": "adele",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.005605072130846274
+ },
+ {
+  "routing": "adele",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.005057300607804018
+ },
+ {
+  "routing": "adele",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.15294715447154472
+ },
+ {
+  "routing": "adele",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.1448788744901074
+ },
+ {
+  "routing": "adele",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.15385474236587954
+ },
+ {
+  "routing": "fl",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.011559942849720744
+ },
+ {
+  "routing": "fl",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.010960559247432467
+ },
+ {
+  "routing": "fl",
+  "traffic": "transpose1",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.008248675870452376
+ },
+ {
+  "routing": "fl",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.2684015380390003
+ },
+ {
+  "routing": "fl",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.23416016029848682
+ },
+ {
+  "routing": "fl",
+  "traffic": "transpose1",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.27134482758620687
+ },
+ {
+  "routing": "fl",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 1,
+  "ooo": 0.012715586997734313
+ },
+ {
+  "routing": "fl",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 2,
+  "ooo": 0.01304787282918313
+ },
+ {
+  "routing": "fl",
+  "traffic": "bitreversal",
+  "pir": 0.006,
+  "seed": 3,
+  "ooo": 0.012388066626455713
+ },
+ {
+  "routing": "fl",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 1,
+  "ooo": 0.14703705531159028
+ },
+ {
+  "routing": "fl",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 2,
+  "ooo": 0.16027000964320154
+ },
+ {
+  "routing": "fl",
+  "traffic": "bitreversal",
+  "pir": 0.012,
+  "seed": 3,
+  "ooo": 0.16130547076778587
+ }
+]

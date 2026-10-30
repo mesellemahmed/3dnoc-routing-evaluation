@@ -1,0 +1,48 @@
+
+6. Printing statistics.
+
+=== qr_select ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+      421        - wires
+      716        - wire bits
+       26        - public wires
+      321        - public wire bits
+       11        - ports
+      144        - port bits
+      406  433.846 cells
+        3        -   $scopeinfo
+       14   14.896   AND2_X1
+        3     3.99   AND3_X1
+        1    1.596   AND4_X1
+       11    14.63   AOI211_X1
+       42   44.688   AOI21_X1
+        4    6.384   AOI221_X1
+        2    4.256   AOI222_X1
+       25    33.25   AOI22_X1
+       59   31.388   INV_X1
+       13   24.206   MUX2_X1
+       44   35.112   NAND2_X1
+        9    9.576   NAND3_X1
+       50     39.9   NOR2_X1
+        6    6.384   NOR3_X1
+        5     6.65   NOR4_X1
+       12    15.96   OAI211_X1
+       39   41.496   OAI21_X1
+        4    6.384   OAI221_X1
+       14   29.792   OAI222_X1
+       24    31.92   OAI22_X1
+        4    7.448   OAI33_X1
+        8    8.512   OR2_X1
+        2     2.66   OR3_X1
+        2    3.192   OR4_X1
+        4    6.384   XNOR2_X1
+        2    3.192   XOR2_X1
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\qr_select': 433.846000
+     of which used for sequential elements: 0.000000 (0.00%)
+

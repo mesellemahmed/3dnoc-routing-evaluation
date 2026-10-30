@@ -1,0 +1,1 @@
+{"routing": "efr", "topo": "vpc", "channels_with_deps": 1784, "edges": 3840, "states": 850944, "cyclic": false, "escape": false, "escape_cyclic": false, "escape_to_adaptive": 0, "adaptive_states_without_escape": 0, "dead_ends": 0, "missing_links": 0, "nonminimal_moves": 322560, "verdict": "acyclic CDG (deadlock-free)", "cycle": [], "cycle_length": 0}

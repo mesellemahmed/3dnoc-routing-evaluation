@@ -1,0 +1,10 @@
+\begin{tabular}{@{}lrrrrrrrc@{}}
+\toprule
+Class & Uniform & Transpose & Shuffle & Bit-rev. & Butterfly & Hotspot & Worst ratio & D4 \\
+\midrule
+\cls{EF} & 96.4 & 273.3 & 80.4 & 114.7 & 21.5 & \best{978.8} & 5.42 (Shuffle) & \xmark \\
+\cls{AES-G} & \best{18.1} & 282.9 & \best{14.9} & \best{103.4} & \best{12.3} & 1193.1 & 1.26 (Transpose) & \cmark \\
+\cls{AdEle} & \second{88.8} & \second{236.1} & \second{37.2} & \second{105.1} & \second{12.9} & 1440.5 & 4.91 (Uniform) & \xmark \\
+\cls{FL} & 233.1 & \best{223.7} & 145.0 & 261.9 & 27.8 & \second{1170.1} & 12.89 (Uniform) & \xmark \\
+\bottomrule
+\end{tabular}

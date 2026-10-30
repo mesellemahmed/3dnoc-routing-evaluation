@@ -1,0 +1,121 @@
+% =====================================================================
+\section{Verdict}
+\label{sec:verdict}
+
+\Cref{tab:verdict} collects the verdicts. We deliberately give no aggregate score: the dimensions are not commensurable, and a weighting would encode one application's priorities as if they were universal. The \emph{Passed} column counts dimensions only to make the table readable.
+
+\begin{table}[tbp]
+\centering
+\caption{Verdict per class and dimension. \cmark{} pass; \xmark{} fail; \pmark{} partial; \xmark$^{\ddagger}$ fail because the class deadlocked in the runs of the dimension; \xmark$^{\S}$ fail of \D{1} only because the class deadlocked under non-atomic VC reallocation (deadlock-free under atomic reallocation); ref: reference class of the family; --: not evaluated. \D{7} is descriptive and omitted.}
+\label{tab:verdict}
+\small
+\setlength{\tabcolsep}{4pt}
+\input{gen/tab_verdict.tex}
+\end{table}
+
+\paragraph{No class passes everything.} The best 3D-FC class passes \val{vd.zxy.pass} of \val{vd.zxy.n} dimensions (\cls{ZXY}), as does the best VPC class (\cls{AES-G}, \val{vd.aesg.pass} of \val{vd.aesg.n}). The two have little in common except that each removes the dominant weakness of its family: \cls{ZXY} breaks the alignment that makes \cls{XYZ} collapse on bit-reversal, with the same hardware, a single VC, an acyclic CDG and the best resistance to flooding among single-VC classes, at a small cost on transpose (saturation \val{d3.sat.zxy.transpose1} against \val{d3.sat.xyz.transpose1}) and in peak temperature under hotspot traffic (\D{10}); \cls{AES-G} distributes inter-tier traffic over all elevators, at the price of global information. Both fail where their information is insufficient---\cls{ZXY} has no path diversity and no fault tolerance, \cls{AES-G} assumes a global load-collection network that nobody has costed.
+
+\paragraph{Adaptivity is not robustness.} The minimal adaptive classes with an escape subnetwork (\cls{FA}, \cls{RCA}, \cls{QR}, \cls{TA}) pass path diversity, saturation and fault tolerance; they are correct only on routers with atomic VC reallocation; and they fail traffic robustness (on hotspot traffic, in a saturated regime), fairness, security and robustness of conclusions. Their verdict profile is close to the opposite of that of dimension-order routing, and no selection function changes it: the four classes differ pairwise in at most two dimensions, all of them cost-related (\D{8}, \D{9}, \D{10}).
+
+\paragraph{Partial adaptivity without VCs is a niche.} Turn-model, mode-switching and Hamiltonian routing (\cls{NF}, \cls{DyAD}, \cls{HAM}) buy fault tolerance with a loss of throughput on uniform traffic and with high latency under hotspot traffic; \cls{NF} and \cls{DyAD} are also the classes most damaged by flooding. They have strengths of their own---\cls{HAM} has the best local reachability under vertical faults and passes \D{12}, \cls{DyAD} passes \D{10}---and they are justified when VCs are unavailable and faults are expected. Otherwise \cls{ZXY} passes more dimensions, and minimal adaptive routing with an escape VC, on a router with atomic reallocation, saturates later on uniform and permutation traffic (\cref{tab:d3fc}).
+
+\paragraph{How robust is the verdict to the thresholds?} Any threshold is a choice. \Cref{tab:thresh} recomputes every threshold-based verdict after halving (strict) and doubling (lenient) each non-zero tolerance; the path-diversity threshold moves to 75\% and 25\%, zero tolerances (\D{11}, packet loss in \D{5}) receive a lenient tolerance only, and the sign test of \D{12} treats differences below 0.01 flits/node/cycle as ties in the lenient regime. Over all classes and dimensions, \val{th.nflip} verdicts change in one of the two directions. The negative findings do not move: no class passes \D{6} under any regime, and \D{4} and \D{11} are unchanged. The classes that pass the most dimensions are \val{th.top.strict} under strict thresholds and \val{th.top.registered} under the written ones (\val{th.topn.registered} each); under lenient thresholds \val{th.top.lenient} pass \val{th.topn.lenient}, \cls{O1T} through \D{3} and \D{12} and \cls{AES-G} through \D{12}, while \cls{ZXY} keeps \val{vd.zxy.pass.lenient}. Several lenient gains, those of \D{10} in particular, reflect that thermal differences below 0.1\,K are practically irrelevant, which we acknowledge.
+
+\begin{table}[tbp]
+\centering
+\caption{Sensitivity of the verdict to the thresholds. Strict and lenient regimes halve and double every non-zero tolerance (\D{2}: 75\% and 25\%); zero tolerances receive a lenient value only; $^{a}$the router-load condition of \D{6} is also relaxed to $-0.01$; $^{b}$differences below 0.01 flits/node/cycle count as ties. \D{1} has no threshold and verdicts marked $^{\ddagger}$ do not depend on thresholds. Passes: number of classes passing (S/R/L). Changes: classes losing (S) or gaining (L) the dimension relative to the registered threshold.}
+\label{tab:thresh}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\input{gen/tab_thresh.tex}
+\end{table}
+
+\paragraph{A decision guide.} Because the verdict has no single winner, \cref{tab:guide} translates it into recommendations conditioned on the designer's constraints, each traced to the dimensions that support it.
+
+\begin{table}[tbp]
+\centering
+\caption{Decision guide derived from the verdict.}
+\label{tab:guide}
+\scriptsize
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{3.3cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{1.5cm}@{}}
+\toprule
+Situation & Prefer & Avoid, and why & Evidence \\
+\midrule
+3D-FC, one VC, no faults expected & \cls{ZXY} & \cls{XYZ}: collapses on bit-reversal-like traffic & \D{3}, \D{4} \\
+3D-FC, two VCs, permutation-heavy traffic & \cls{FA} with atomic VC reallocation & non-atomic reuse (deadlock); learned or regional selections (cost without gain) & \D{1}, \D{3}, \D{8} \\
+Hotspots, shared memory controllers & \cls{ZXY} & adaptive and turn-model routing (\cls{FA}: \val{d4.hot.fa.over.xyz}$\times$ \cls{XYZ}'s hotspot latency), \cls{O1T} (\val{d4.hot.o1t.over.xyz}$\times$) & \D{4} \\
+Untrusted traffic (flooding risk) & \cls{O1T}, \cls{ZXY} & minimal adaptive and turn-model routing: up to \val{d11.max.rel}$\times$ \cls{XYZ}'s inflation under flooding & \D{11} \\
+Planar faults, no VCs & \cls{HAM} & dimension-order routing (one path) & \D{5} \\
+Clustered vertical faults & \cls{HAM}-like non-minimal recovery; spare TSVs & local minimal adaptive routing (correlation penalty) & \D{5}, \cref{thm:corr} \\
+VPC stack, global information affordable & \cls{AES-G} & static or subset-based local elevator selection (\cls{EF}, \cls{FL}, \cls{AdEle}): load imbalance and loss under faults & \D{4}, \D{5} \\
+VPC stack, no run-time load information & \cls{EF-R} (fault-aware static assignment) & fault-unaware assignment (\cls{EF}, \cls{FL}, \cls{AdEle}): packet loss & \D{5} \\
+VPC stack with very few elevators & \cls{FL}-style planar adaptivity & reliance on elevator selection alone & \cref{tab:vpc4} \\
+Thermal limits & minimal routing plus DVFS or task migration & non-minimal routing (\cls{VAL}: up to $+\val{d10.val.worstabs}$\,K); routing alone gains $\le\val{d10.ta.bestabs}$\,K & \D{10} \\
+Tight area budget & dimension-order or \cls{FA} & tabular Q-routing (\val{hw.qtable.ratio}$\times$ router area), elevator-cost tables (\cls{AdEle}) & \D{8} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% =====================================================================
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Lessons}
+\label{sec:lessons}
+
+\begin{enumerate}[label=\textbf{L\arabic*.},leftmargin=*,itemsep=2pt]
+\item \textbf{Deadlock freedom is a property of the routing relation \emph{and} the router.} Duato's theorem assumes atomic VC reallocation; without it, every escape-based class of our evaluation deadlocked at overload, and whether a simulator exposes the hazard depends on implementation details---in our simulator, the injection policy; between our simulator and BookSim, details that we did not isolate. A deadlock argument must state the router assumptions it relies on, and an evaluation must include a drain test, because every deadlock of our campaign was partial and invisible to a global watchdog.
+\item \textbf{Report the baseline that matters.} Against \cls{XYZ}, almost any adaptive selection looks good on permutations and almost any looks bad on hotspots. Against a credit-based minimal adaptive selection with the same VCs and buffers, regional, learned and thermal selections gain at most a percent.
+\item \textbf{The dimension order is a free parameter.} Vertical-first routing passes the most dimensions of the 3D-FC family with the hardware of \cls{XYZ}. A plausible reason, which we did not isolate, is that routing the scarce resource first spreads vertical traffic over all columns.
+\item \textbf{Adaptivity has an attack surface.} Minimal adaptive routing multiplies the latency inflation of benign traffic under a flooding attack by \val{d11.fa.over.xyz.006} to \val{d11.fa.over.xyz} relative to \cls{XYZ}, and turn-model routing by up to \val{d11.max.rel}; spreading traffic over all minimal paths may also spread the attacker's congestion tree. Security-aware 3D routing must be evaluated against adaptive baselines under attack, not only in the absence of attack.
+\item \textbf{Model TSV faults as clustered.} Correlation is harmless for static routes on average, harmful for local adaptive routing, and decisive for yield: the probability that a tier boundary is severed rises by a factor of \val{part.ratio.stride4.min} to \val{part.ratio.stride4.max} with four elevators per boundary and by many orders of magnitude for denser layouts (\cref{tab:partition}).
+\item \textbf{In partially connected stacks, elevator selection is the routing algorithm---while elevators are not all bottlenecks.} With sixteen elevators, how inter-tier traffic is distributed over them decides latency, robustness, energy and fault tolerance, and planar adaptivity matters little; with four, planar adaptivity around the elevators matters more. The information needed for good elevator selection is global, and its cost is the open problem.
+\item \textbf{Fairness depends on arbitration as well as routing.} No routing class provides source fairness at overload under round-robin arbitration, although the class changes the degree of unfairness considerably (\D{6}); starvation of thousands of cycles is the rule. Routing papers that claim fairness should evaluate it with the arbitration they assume.
+\item \textbf{Routing is a weak thermal knob.} Within the compact model, minimal routing changes peak temperature by fractions of a kelvin, and only non-minimal routing or elevator funnelling moves it by more (\cls{VAL}: $+\val{d10.val.worstabs}$\,K; \cls{FL}: $+\val{d10.fl.worstabs}$\,K); claims of large thermal gains from routing alone should state the network's share of power.
+\item \textbf{Structural analysis complements, but does not replace, scalar metrics.} ERA exposes congestion migration under hotspots and elevator under-use, but its temporal metrics depend on the window and its significance tests saturate on long traces; effect sizes and window lengths must be reported.
+\end{enumerate}
+
+\subsection{Threats to validity}
+\label{sec:threats}
+
+\paragraph{Construct validity.} The evaluated classes are faithful to the routing relations and to the kind of selection of the surveyed algorithms, not to every detail: we do not model buffer resizing (STTAR), wireless links (ATLAS), game-theoretic negotiation (STAR), non-minimal beltways (AMBTAR), deflection routing or 2.5D interposer networks. Conclusions about a class transfer to a surveyed algorithm only to the extent that the algorithm shares the class's relation and kind of selection. Three idealisations favour some classes: \cls{TA} reads temperatures from the same compact model that judges \D{10}; \cls{AES-G} and \cls{EF-R} use global load and fault maps without latency, which \D{8} penalises only through the cost of the information network; and the exact reachability analysis of \D{5} uses the adaptive relation alone, ignoring that faults can disconnect the XYZ escape subnetwork, which voids the connectivity condition of \cref{thm:duato}. Energy and thermal models are parametric and coarse; we use them for relative comparisons over wide parameter ranges, not for absolute predictions. Synthetic traffic does not capture the dependencies of real workloads~\cite{hestness2010netrace,malikov2025traffic}.
+
+\paragraph{Internal validity.} The simulator could contain errors that favour or penalise some classes. We mitigated this risk by cross-validation against BookSim, by a checker that calls the simulator's own routing function, by functional checks of four route units, by a negative test of the checker, by reproducing the non-atomic deadlock on three mesh sizes and three pipeline depths, and by instrumenting BookSim, the one simulator in which we did not observe it: BookSim reaches the same commitment states, at about half the rate of our router, for reasons we did not isolate (\cref{sec:rq-correct}). The cross-validation itself is limited: the $8\times8\times8$ runs use one seed; on that mesh \cls{ROMM} and \cls{VAL} have only one or two stable sweep points, so their agreement on saturation is trivial and their latency deviation cannot be computed; and the $8\times8\times4$ mesh of our campaigns cannot be compared, because BookSim's mesh requires equal radices. Selection keys (for example, the preference of free credits, or of adaptive over escape VCs) are implementation choices that affect absolute numbers; they are identical across the classes that share them.
+
+\paragraph{External validity.} Most groups use an $8\times8\times4$ mesh with two VCs; \D{12} and the scalability group show which conclusions survive other sizes and router parameters, and several do not. With atomic reallocation and eight-flit packets, buffer depth beyond the packet length is never used, so our results say nothing about deeper buffers. VPC results are for 16 elevators except in one group; with four elevators the ranking of VPC classes changes on transpose traffic (\cref{tab:vpc4}), so VPC conclusions are conditional on the elevator density.
+
+\paragraph{Conclusion validity.} Six of the thirteen groups (ERA, VPC-ERA, stress, DoS, burst and VPC faults) use five seeds; the others use two or three, and the sensitivity and scalability groups two, which suffices to detect the large effects we report there but not small ones. The paired family of comparisons is corrected with Holm's method; the verdicts are deterministic functions of point estimates and their sensitivity to thresholds is reported. Two forms of censoring affect several verdicts. Latency includes source queueing and covers delivered packets only, so it is biased downwards wherever packets remain undelivered: in the hotspot runs, which decide \val{d4.fc.nohot.nflips} of the \val{d4.fc.nfail} 3D-FC failures of \D{4}, and in the hotspot columns of \D{10}, in \val{d4.vpc.sat.frac}\% of the VPC ERA-grid runs, and in the flooding runs of \D{11}, where using the undelivered fraction instead would change \val{d11.alt.nverdicts} (\cref{sec:rq-cost}). And saturation throughputs are known only to within the bracket of the refined load sweep (at most \val{d3.bracket.max}\%), which leaves one \D{3} verdict uncertain.
+
+\paragraph{Protocol deviations.} We list every departure from the written criteria. (i) \D{12} uses the accepted throughput at an offered load of 0.6 flits/node/cycle as a proxy for saturation throughput, because the sensitivity group was not swept; it compares exact differences, and an exact tie counts as neither sign. (ii) One rule was added when the criteria were applied (\cref{sec:dims}): a class that deadlocks in any run of a dimension fails it. It applies to \val{dlrule.n} verdicts, those of the four escape-based classes on \D{12}, which are failures without it as well; it changes no pass count, only the reason recorded for these failures ($^{\ddagger}$ in \cref{tab:verdict}). (iii) The written effect size, Cliff's $\delta$, was replaced by its analogue for matched pairs, the paired dominance statistic. (iv) \cls{EF-R} was added for the fault experiments and is not evaluated on the other dimensions. (v) The threshold-sensitivity analysis is post hoc. (vi) The bisection refinement of the load sweep was added after an internal audit had shown that the coarse grid decided several \D{3} verdicts; it changed the \D{3} verdict of \cls{TA} from fail to pass, and the bit-reversal ratio of \cls{FA} to \cls{XYZ} from \val{d3.br.fa.over.xyz.coarse} on the coarse grid to \val{d3.br.fa.over.xyz}. (vii) \D{1} is applied as written, counting the non-atomic runs; restricting it to atomic runs, as an earlier version of our analysis did, would let the four escape-based classes pass.
+
+\paragraph{Conflict of interest.} The authors use their own structural-observability framework~\cite{mesellem2026era} as one dimension of the evaluation (\D{7}); its limitations---window dependence and saturation of its significance test---are reported in \cref{sec:rq-structure}.
+
+% =====================================================================
+\section{Research agenda}
+\label{sec:agenda}
+
+\begin{enumerate}[label=\textbf{A\arabic*.},leftmargin=*,itemsep=2pt]
+\item \textbf{Verified routing for the router that is built.} Mechanised deadlock checks such as ours should take the router micro-architecture---VC reallocation, injection policy, shared buffers---as input, and new adaptive designs should come with a check rather than a proof sketch. Recovery-based schemes deserve renewed attention for 3D NoCs, where faults make static guarantees fragile.
+\item \textbf{Correlation-aware fault models and yield-aware elevator placement.} \Cref{thm:corr} shows that the placement of elevators and spare TSVs should minimise the probability of a severed boundary under clustered faults, which favours spatially spread elevators; joint optimisation of placement, spares and routing is open.
+\item \textbf{Cheap global information for elevator selection.} Global-load selection is the most effective VPC policy; its information network has never been designed and costed. Approximations from piggybacked or sampled load information, evaluated against \cls{AES-G} as an upper bound, are a well-posed problem.
+\item \textbf{Fair adaptive routing.} Combining adaptive routing with age-based or frame-based arbitration, and evaluating source fairness at overload, would show how much of the unfairness we observe belongs to routing and how much to arbitration.
+\item \textbf{Adaptive routing under attack.} The amplification of flooding by adaptivity calls for rate limiting, isolation of suspect flows into separate virtual networks, and evaluation of security-aware routing against adaptive baselines under attack.
+\item \textbf{Learning under hardware budgets.} Learned selections must beat a credit-based selection, fit a storage budget smaller than the router, and keep an escape subnetwork; compact function approximators and shared tables are the obvious directions.
+\item \textbf{Realistic workloads and common platforms.} Trace-driven and full-system evaluations of 3D routing, on shared simulators with documented router models, would make results comparable across papers; our reporting standard (\cref{tab:checklist}) lists the minimum information.
+\item \textbf{Structural observability online.} ERA indicators are computed offline from complete traces; whether windowed versions can become cheap online monitors of congestion migration, deadlock and attacks is open.
+\end{enumerate}
+
+% =====================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+We surveyed routing in 3D networks-on-chip and evaluated the routing classes behind the surveyed algorithms on a common, verified platform, applying the same explicit criteria to every proposal. The evaluation does not crown a winner. It shows instead that deadlock freedom depends on router details that papers do not report, that adaptivity trades permutation throughput for fragility under hotspots and attacks, that sophisticated selection functions buy little for their cost, that clustered TSV faults reduce the benefit of local adaptivity and multiply the probability that a stack is partitioned, and that in partially connected stacks the elevator selection is the algorithm that matters. A simple vertical-first dimension order and a global-load elevator selection pass the most dimensions under the written and strict thresholds; no class passes all. We hope that the protocol, the reporting standard and the released artefact will make future claims in this field easier to check and harder to overstate.
+
+\section*{Data and code availability}
+The simulator and channel-dependency checker, the analytical fault-reachability and partition models, the Verilog route units and synthesis scripts, the campaign drivers, all raw results, and the script that generates every number, table and figure of this article are released as one artefact [repository link to be added upon acceptance].
+
+\section*{Declaration of generative AI and AI-assisted technologies}
+[To be completed by the author(s) in accordance with the journal's policy, stating which tools were used, for which tasks (for example, code development, data analysis or language editing), and that the author(s) reviewed and edited all content and take full responsibility for it.]
+
+\section*{Declaration of competing interest}
+The author(s) use their own previously published evaluation framework (ERA); this is disclosed in \cref{sec:threats}. [Funding and any other interests to be declared by the author(s).]

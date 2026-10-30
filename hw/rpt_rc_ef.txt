@@ -1,0 +1,39 @@
+
+6. Printing statistics.
+
+=== rc_ef ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+       63        - wires
+      104        - wire bits
+       16        - public wires
+       57        - public wire bits
+        9        - ports
+       29        - port bits
+       57   57.722 cells
+        1        -   $scopeinfo
+        1    1.064   AND2_X1
+        5     6.65   AND3_X1
+        1    1.596   AND4_X1
+        1     1.33   AOI211_X1
+        5     5.32   AOI21_X1
+       11    5.852   INV_X1
+        2    3.724   MUX2_X1
+        2    1.596   NAND2_X1
+        1     1.33   NAND4_X1
+        9    7.182   NOR2_X1
+        3    3.192   NOR3_X1
+        4    4.256   OAI21_X1
+        2     2.66   OAI22_X1
+        1    1.862   OAI33_X1
+        3    3.192   OR2_X1
+        4     5.32   OR3_X1
+        1    1.596   OR4_X1
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\rc_ef': 57.722000
+     of which used for sequential elements: 0.000000 (0.00%)
+

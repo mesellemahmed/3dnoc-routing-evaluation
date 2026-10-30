@@ -1,0 +1,8 @@
+{"r": 83, "ip": 5, "v": 1, "out_port": 3, "out_vc": 1, "pkts": [[54980, 1, 112]], "cands": [], "credits": 0}
+{"r": 91, "ip": 4, "v": 1, "out_port": 5, "out_vc": 1, "pkts": [[68009, 1, 230]], "cands": [], "credits": 0}
+{"r": 147, "ip": 3, "v": 1, "out_port": 6, "out_vc": 1, "pkts": [[73647, 1, 80]], "cands": [], "credits": 0}
+{"r": 152, "ip": 5, "v": 1, "out_port": 3, "out_vc": 1, "pkts": [[12754, 1, 162]], "cands": [], "credits": 0}
+{"r": 155, "ip": 6, "v": 1, "out_port": 4, "out_vc": 1, "pkts": [[66797, 1, 151]], "cands": [], "credits": 0}
+{"r": 160, "ip": 4, "v": 1, "out_port": 5, "out_vc": 1, "pkts": [[10466, 1, 254]], "cands": [], "credits": 0}
+{"r": 216, "ip": 3, "v": 1, "out_port": 6, "out_vc": 1, "pkts": [[7697, 1, 16]], "cands": [], "credits": 0}
+{"r": 224, "ip": 6, "v": 1, "out_port": 4, "out_vc": 1, "pkts": [[12380, 1, 220]], "cands": [], "credits": 0}
